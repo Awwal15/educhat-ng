@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Subject } from "@/data/subjects";
 import ReactMarkdown from "react-markdown";
 import { motion, AnimatePresence } from "framer-motion";
+import { toast } from "sonner";
 
 interface Message {
   id: string;
@@ -17,28 +18,7 @@ interface LearningChatProps {
   onStartQuiz: (messages: Message[]) => void;
 }
 
-// Simple mock AI responses for demo (will be replaced with real AI later)
-function getMockResponse(subject: string, question: string): string {
-  return `Great question about **${subject}**! 🎓
-
-Let me explain this in a simple way:
-
-${question.toLowerCase().includes("what") ? `This is a fundamental concept in ${subject}. Think of it like how things work in everyday life in Nigeria.` : ""}
-
-**Here's a simple explanation:**
-
-In ${subject}, this topic is very important for your WAEC exam. Let me break it down:
-
-1. **Key Point**: The concept relates to how we observe things around us — for example, in the market or at home.
-
-2. **Nigerian Example**: Think about how a trader in Aba market calculates profit and loss — that's a practical application of this concept.
-
-3. **WAEC Tip**: This topic usually appears in Section A (objectives) and sometimes in theory questions.
-
-> 💡 **Remember**: Understanding the "why" behind concepts helps you answer tricky WAEC questions.
-
-Would you like me to explain further, or are you ready for a **quiz** to test your understanding? Just click the "Take Quiz" button when you're ready! 📝`;
-}
+const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/learn-chat`;
 
 const LearningChat = ({ subject, onBack, onStartQuiz }: LearningChatProps) => {
   const [messages, setMessages] = useState<Message[]>([
@@ -61,15 +41,86 @@ const LearningChat = ({ subject, onBack, onStartQuiz }: LearningChatProps) => {
     if (!text || isLoading) return;
 
     const userMsg: Message = { id: Date.now().toString(), role: "user", content: text };
-    setMessages((prev) => [...prev, userMsg]);
+    const allMessages = [...messages, userMsg];
+    setMessages(allMessages);
     setInput("");
     setIsLoading(true);
 
-    // Simulate AI response delay
-    await new Promise((r) => setTimeout(r, 1200));
-    const response = getMockResponse(subject.name, text);
-    const assistantMsg: Message = { id: (Date.now() + 1).toString(), role: "assistant", content: response };
-    setMessages((prev) => [...prev, assistantMsg]);
+    // Prepare chat history (exclude welcome message id, just send role+content)
+    const chatHistory = allMessages.map((m) => ({ role: m.role, content: m.content }));
+
+    let assistantSoFar = "";
+    const upsertAssistant = (chunk: string) => {
+      assistantSoFar += chunk;
+      setMessages((prev) => {
+        const last = prev[prev.length - 1];
+        if (last?.role === "assistant" && last.id === "streaming") {
+          return prev.map((m, i) => (i === prev.length - 1 ? { ...m, content: assistantSoFar } : m));
+        }
+        return [...prev, { id: "streaming", role: "assistant", content: assistantSoFar }];
+      });
+    };
+
+    try {
+      const resp = await fetch(CHAT_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+        },
+        body: JSON.stringify({ messages: chatHistory, subject: subject.name }),
+      });
+
+      if (!resp.ok) {
+        const err = await resp.json().catch(() => ({ error: "Network error" }));
+        toast.error(err.error || "Something went wrong");
+        setIsLoading(false);
+        return;
+      }
+
+      if (!resp.body) throw new Error("No response body");
+
+      const reader = resp.body.getReader();
+      const decoder = new TextDecoder();
+      let textBuffer = "";
+      let streamDone = false;
+
+      while (!streamDone) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        textBuffer += decoder.decode(value, { stream: true });
+
+        let newlineIndex: number;
+        while ((newlineIndex = textBuffer.indexOf("\n")) !== -1) {
+          let line = textBuffer.slice(0, newlineIndex);
+          textBuffer = textBuffer.slice(newlineIndex + 1);
+          if (line.endsWith("\r")) line = line.slice(0, -1);
+          if (line.startsWith(":") || line.trim() === "") continue;
+          if (!line.startsWith("data: ")) continue;
+
+          const jsonStr = line.slice(6).trim();
+          if (jsonStr === "[DONE]") { streamDone = true; break; }
+
+          try {
+            const parsed = JSON.parse(jsonStr);
+            const content = parsed.choices?.[0]?.delta?.content as string | undefined;
+            if (content) upsertAssistant(content);
+          } catch {
+            textBuffer = line + "\n" + textBuffer;
+            break;
+          }
+        }
+      }
+
+      // Finalize streaming message with a stable id
+      setMessages((prev) =>
+        prev.map((m) => (m.id === "streaming" ? { ...m, id: Date.now().toString() } : m))
+      );
+    } catch (e) {
+      console.error(e);
+      toast.error("Failed to get response. Please try again.");
+    }
+
     setIsLoading(false);
   };
 
@@ -124,7 +175,7 @@ const LearningChat = ({ subject, onBack, onStartQuiz }: LearningChatProps) => {
             </motion.div>
           ))}
         </AnimatePresence>
-        {isLoading && (
+        {isLoading && messages[messages.length - 1]?.role !== "assistant" && (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex justify-start">
             <div className="bg-card card-shadow rounded-2xl rounded-bl-md px-4 py-3">
               <Loader2 className="h-5 w-5 animate-spin text-primary" />
