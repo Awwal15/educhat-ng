@@ -111,7 +111,7 @@ const Index = () => {
             >
               <div className="flex items-center gap-1.5 rounded-full bg-primary-foreground/15 backdrop-blur-sm px-3 py-1.5 text-xs font-medium text-primary-foreground">
                 <BookOpen className="h-3.5 w-3.5" />
-                8 Subjects
+                9 Subjects
               </div>
               <div className="flex items-center gap-1.5 rounded-full bg-primary-foreground/15 backdrop-blur-sm px-3 py-1.5 text-xs font-medium text-primary-foreground">
                 <Sparkles className="h-3.5 w-3.5" />

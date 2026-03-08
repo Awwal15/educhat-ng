@@ -1,4 +1,4 @@
-import { BookOpen, FlaskConical, Calculator, Languages, Globe, Leaf, Atom, PenTool } from "lucide-react";
+import { BookOpen, FlaskConical, Calculator, Languages, Globe, Leaf, Atom, PenTool, TrendingUp } from "lucide-react";
 
 export interface Subject {
   id: string;
@@ -17,4 +17,5 @@ export const subjects: Subject[] = [
   { id: "literature", name: "Literature in English", icon: BookOpen, description: "Prose, Poetry, Drama & Literary Devices", color: "bg-purple-100 text-purple-700" },
   { id: "geography", name: "Geography", icon: Globe, description: "Physical & Human Geography of Nigeria", color: "bg-teal-100 text-teal-700" },
   { id: "government", name: "Government", icon: PenTool, description: "Nigerian Government, Constitution & Civics", color: "bg-red-100 text-red-700" },
+  { id: "economics", name: "Economics", icon: TrendingUp, description: "Micro & Macroeconomics, Trade & Development", color: "bg-amber-100 text-amber-700" },
 ];
