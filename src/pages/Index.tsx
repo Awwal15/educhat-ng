@@ -72,11 +72,18 @@ const Index = () => {
                 <GraduationCap className="h-6 w-6 text-primary-foreground" />
                 <span className="font-heading text-lg font-bold text-primary-foreground">LearnWAEC</span>
               </div>
-              <img
-                src={waecLogo}
-                alt="WAEC Logo"
-                className="h-14 w-auto drop-shadow-lg"
-              />
+              <div className="flex items-center gap-2">
+                <img
+                  src={waecLogo}
+                  alt="WAEC Logo"
+                  className="h-14 w-auto drop-shadow-lg"
+                />
+                <img
+                  src={necoLogo}
+                  alt="NECO Logo"
+                  className="h-14 w-auto drop-shadow-lg"
+                />
+              </div>
             </motion.div>
 
             {/* Hero Content */}
