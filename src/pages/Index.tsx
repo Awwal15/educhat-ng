@@ -8,6 +8,7 @@ import { motion } from "framer-motion";
 import heroBg from "@/assets/hero-bg.jpg";
 import coatOfArms from "@/assets/nigeria-coat-of-arms.png";
 import waecLogo from "@/assets/waec-logo.png";
+import necoLogo from "@/assets/neco-logo.png";
 
 type View = "home" | "chat" | "quiz";
 
@@ -71,11 +72,18 @@ const Index = () => {
                 <GraduationCap className="h-6 w-6 text-primary-foreground" />
                 <span className="font-heading text-lg font-bold text-primary-foreground">LearnWAEC</span>
               </div>
-              <img
-                src={waecLogo}
-                alt="WAEC Logo"
-                className="h-14 w-auto drop-shadow-lg"
-              />
+              <div className="flex items-center gap-2">
+                <img
+                  src={waecLogo}
+                  alt="WAEC Logo"
+                  className="h-14 w-auto drop-shadow-lg"
+                />
+                <img
+                  src={necoLogo}
+                  alt="NECO Logo"
+                  className="h-14 w-auto drop-shadow-lg"
+                />
+              </div>
             </motion.div>
 
             {/* Hero Content */}
@@ -142,6 +150,7 @@ const Index = () => {
           <div className="flex items-center justify-center gap-4 mb-2">
             <img src={coatOfArms} alt="" className="h-8 w-auto opacity-40" />
             <img src={waecLogo} alt="" className="h-8 w-auto opacity-40" />
+            <img src={necoLogo} alt="" className="h-8 w-auto opacity-40" />
           </div>
           <p className="text-xs text-muted-foreground">
             Built for SS1–SS3 students preparing for WAEC 📚
