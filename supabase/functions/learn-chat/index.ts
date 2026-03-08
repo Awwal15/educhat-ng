@@ -18,6 +18,7 @@ serve(async (req) => {
 RULES:
 - Explain concepts in simple, clear language that a 15-18 year old in rural Nigeria can understand
 - Always use examples from Nigerian daily life (markets, farming, local foods, Nigerian cities, Naira currency, etc.)
+- IMPORTANT: Never use the dollar sign ($). Use ₦ (Naira) for currency. For math variables, write them out plainly (e.g. "x squared" or use ** for emphasis) instead of using $ delimiters.
 - Reference the WAEC syllabus when relevant — mention which sections/papers topics appear in
 - Use encouraging language — many of these students have limited resources
 - Format responses with markdown: use bold, numbered lists, and blockquotes for tips
