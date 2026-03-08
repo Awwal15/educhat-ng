@@ -1,10 +1,13 @@
 import { useState } from "react";
-import { GraduationCap } from "lucide-react";
+import { GraduationCap, BookOpen, Sparkles } from "lucide-react";
 import { subjects, Subject } from "@/data/subjects";
 import SubjectCard from "@/components/SubjectCard";
 import LearningChat from "@/components/LearningChat";
 import QuizView from "@/components/QuizView";
 import { motion } from "framer-motion";
+import heroBg from "@/assets/hero-bg.jpg";
+import coatOfArms from "@/assets/nigeria-coat-of-arms.png";
+import waecLogo from "@/assets/waec-logo.png";
 
 type View = "home" | "chat" | "quiz";
 
@@ -31,7 +34,6 @@ const Index = () => {
           setSelectedSubject(null);
         }}
         onStartQuiz={(messages) => {
-          // Extract topic from recent conversation
           const userMessages = messages.filter((m) => m.role === "user");
           const topic = userMessages.map((m) => m.content).join(", ");
           setQuizTopic(topic || selectedSubject.name);
@@ -43,35 +45,111 @@ const Index = () => {
 
   return (
     <div className="min-h-[100dvh] bg-background">
-      {/* Hero */}
-      <div className="hero-gradient px-4 pb-8 pt-12">
-        <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="container max-w-lg mx-auto">
-          <div className="flex items-center gap-2 mb-3">
-            <GraduationCap className="h-7 w-7 text-primary-foreground" />
-            <h1 className="font-heading text-xl font-bold text-primary-foreground">LearnWAEC</h1>
+      {/* Hero Section with Background Image */}
+      <div className="relative overflow-hidden">
+        {/* Background image with overlay */}
+        <div className="absolute inset-0">
+          <img src={heroBg} alt="" className="h-full w-full object-cover" />
+          <div className="absolute inset-0 hero-gradient opacity-85" />
+          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-background" />
+        </div>
+
+        <div className="relative px-4 pb-16 pt-8">
+          <div className="container max-w-lg mx-auto">
+            {/* Logos Row */}
+            <motion.div
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="flex items-center justify-between mb-6"
+            >
+              <img
+                src={coatOfArms}
+                alt="Nigeria Coat of Arms"
+                className="h-14 w-auto drop-shadow-lg"
+              />
+              <div className="flex items-center gap-2">
+                <GraduationCap className="h-6 w-6 text-primary-foreground" />
+                <span className="font-heading text-lg font-bold text-primary-foreground">LearnWAEC</span>
+              </div>
+              <img
+                src={waecLogo}
+                alt="WAEC Logo"
+                className="h-14 w-auto drop-shadow-lg"
+              />
+            </motion.div>
+
+            {/* Hero Content */}
+            <motion.div
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.15 }}
+              className="text-center"
+            >
+              <h1 className="font-heading text-3xl font-extrabold text-primary-foreground leading-tight tracking-tight">
+                Learn Smart.<br />
+                <span className="text-secondary">Pass Your WAEC.</span>
+              </h1>
+              <p className="mt-3 text-sm text-primary-foreground/85 leading-relaxed max-w-xs mx-auto">
+                Free AI-powered learning for Nigerian students. Ask questions, get simple explanations, and ace your exams. 🇳🇬
+              </p>
+            </motion.div>
+
+            {/* Stats Pills */}
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3 }}
+              className="flex items-center justify-center gap-3 mt-5"
+            >
+              <div className="flex items-center gap-1.5 rounded-full bg-primary-foreground/15 backdrop-blur-sm px-3 py-1.5 text-xs font-medium text-primary-foreground">
+                <BookOpen className="h-3.5 w-3.5" />
+                8 Subjects
+              </div>
+              <div className="flex items-center gap-1.5 rounded-full bg-primary-foreground/15 backdrop-blur-sm px-3 py-1.5 text-xs font-medium text-primary-foreground">
+                <Sparkles className="h-3.5 w-3.5" />
+                AI Tutor
+              </div>
+              <div className="flex items-center gap-1.5 rounded-full bg-primary-foreground/15 backdrop-blur-sm px-3 py-1.5 text-xs font-medium text-primary-foreground">
+                <GraduationCap className="h-3.5 w-3.5" />
+                SS1–SS3
+              </div>
+            </motion.div>
           </div>
-          <h2 className="font-heading text-2xl font-bold text-primary-foreground leading-tight">
-            Learn smart.<br />Pass your WAEC. 🇳🇬
-          </h2>
-          <p className="mt-2 text-sm text-primary-foreground/80 leading-relaxed">
-            Ask questions in any subject, get simple explanations with Nigerian examples, then test yourself with quizzes.
-          </p>
-        </motion.div>
+        </div>
       </div>
 
-      {/* Subjects */}
-      <div className="container max-w-lg mx-auto px-4 -mt-4">
-        <div className="rounded-xl bg-card card-shadow p-4">
-          <h3 className="font-heading text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-3">Choose a Subject</h3>
+      {/* Subjects Section */}
+      <div className="container max-w-lg mx-auto px-4 -mt-6">
+        <div className="rounded-2xl bg-card card-shadow p-5">
+          <h2 className="font-heading text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-4 flex items-center gap-2">
+            <BookOpen className="h-4 w-4" />
+            Choose a Subject
+          </h2>
           <div className="space-y-3">
             {subjects.map((subject, i) => (
-              <SubjectCard key={subject.id} subject={subject} index={i} onClick={() => handleSelectSubject(subject)} />
+              <SubjectCard
+                key={subject.id}
+                subject={subject}
+                index={i}
+                onClick={() => handleSelectSubject(subject)}
+              />
             ))}
           </div>
         </div>
-        <p className="text-center text-xs text-muted-foreground mt-6 pb-8">
-          Built for SS1–SS3 students preparing for WAEC 📚
-        </p>
+
+        {/* Footer */}
+        <div className="text-center mt-8 pb-8">
+          <div className="flex items-center justify-center gap-4 mb-2">
+            <img src={coatOfArms} alt="" className="h-8 w-auto opacity-40" />
+            <img src={waecLogo} alt="" className="h-8 w-auto opacity-40" />
+          </div>
+          <p className="text-xs text-muted-foreground">
+            Built for SS1–SS3 students preparing for WAEC 📚
+          </p>
+          <p className="text-xs text-muted-foreground mt-1">
+            Unity and Faith, Peace and Progress
+          </p>
+        </div>
       </div>
     </div>
   );
