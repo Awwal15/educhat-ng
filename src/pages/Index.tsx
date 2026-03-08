@@ -11,6 +11,7 @@ type View = "home" | "chat" | "quiz";
 const Index = () => {
   const [view, setView] = useState<View>("home");
   const [selectedSubject, setSelectedSubject] = useState<Subject | null>(null);
+  const [quizTopic, setQuizTopic] = useState<string>("");
 
   const handleSelectSubject = (subject: Subject) => {
     setSelectedSubject(subject);
@@ -18,7 +19,7 @@ const Index = () => {
   };
 
   if (view === "quiz" && selectedSubject) {
-    return <QuizView subject={selectedSubject} onBack={() => setView("chat")} />;
+    return <QuizView subject={selectedSubject} topic={quizTopic} onBack={() => setView("chat")} />;
   }
 
   if (view === "chat" && selectedSubject) {
@@ -29,7 +30,13 @@ const Index = () => {
           setView("home");
           setSelectedSubject(null);
         }}
-        onStartQuiz={() => setView("quiz")}
+        onStartQuiz={(messages) => {
+          // Extract topic from recent conversation
+          const userMessages = messages.filter((m) => m.role === "user");
+          const topic = userMessages.map((m) => m.content).join(", ");
+          setQuizTopic(topic || selectedSubject.name);
+          setView("quiz");
+        }}
       />
     );
   }
