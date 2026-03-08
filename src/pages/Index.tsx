@@ -95,7 +95,7 @@ const Index = () => {
             >
               <h1 className="font-heading text-3xl font-extrabold text-primary-foreground leading-tight tracking-tight">
                 Learn Smart.<br />
-                <span className="text-secondary">Pass Your WAEC.</span>
+                <span className="text-secondary">Pass Your WAEC and NECO.</span>
               </h1>
               <p className="mt-3 text-sm text-primary-foreground/85 leading-relaxed max-w-xs mx-auto">
                 Free AI-powered learning for Nigerian students. Ask questions, get simple explanations, and ace your exams. 🇳🇬
