@@ -1,8 +1,10 @@
-import { useState } from "react";
-import { ArrowLeft, CheckCircle2, XCircle, RotateCcw } from "lucide-react";
+import { useState, useEffect } from "react";
+import { ArrowLeft, CheckCircle2, XCircle, RotateCcw, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Subject } from "@/data/subjects";
 import { motion } from "framer-motion";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 
 interface QuizQuestion {
   id: number;
@@ -14,59 +16,41 @@ interface QuizQuestion {
 
 interface QuizViewProps {
   subject: Subject;
+  topic?: string;
   onBack: () => void;
 }
 
-function generateMockQuiz(subjectName: string): QuizQuestion[] {
-  const quizzes: Record<string, QuizQuestion[]> = {
-    default: [
-      {
-        id: 1,
-        question: `Which of the following best describes a key concept in ${subjectName}?`,
-        options: ["The study of living things", "The study of numbers and patterns", "The study of matter and energy", "The study of the earth"],
-        correctIndex: 1,
-        explanation: `This is a foundational concept in ${subjectName}. Understanding definitions helps you tackle WAEC objective questions quickly.`,
-      },
-      {
-        id: 2,
-        question: "A trader in Lagos bought goods for ₦5,000 and sold them for ₦7,500. What is the percentage profit?",
-        options: ["25%", "50%", "75%", "150%"],
-        correctIndex: 1,
-        explanation: "Profit = ₦7,500 - ₦5,000 = ₦2,500. Percentage profit = (2500/5000) × 100 = 50%. This is a common WAEC question!",
-      },
-      {
-        id: 3,
-        question: "In Nigeria, the harmattan season is associated with which of the following?",
-        options: ["Heavy rainfall", "Cool dry winds from the Sahara", "Flooding", "Tropical storms"],
-        correctIndex: 1,
-        explanation: "The harmattan brings cool, dry, and dusty winds from the Sahara Desert across West Africa, typically between November and March.",
-      },
-      {
-        id: 4,
-        question: "Which Nigerian city is known as the 'Centre of Commerce'?",
-        options: ["Abuja", "Lagos", "Kano", "Port Harcourt"],
-        correctIndex: 1,
-        explanation: "Lagos is the commercial capital of Nigeria and one of the largest economies in Africa.",
-      },
-      {
-        id: 5,
-        question: `A WAEC ${subjectName} question tests your understanding of practical applications. Which approach is best?`,
-        options: ["Memorise everything", "Understand concepts and practice", "Only read textbooks", "Skip difficult topics"],
-        correctIndex: 1,
-        explanation: "Understanding concepts and practicing past questions is the best approach for WAEC success!",
-      },
-    ],
-  };
-  return quizzes.default;
-}
-
-const QuizView = ({ subject, onBack }: QuizViewProps) => {
-  const [questions] = useState(() => generateMockQuiz(subject.name));
+const QuizView = ({ subject, topic, onBack }: QuizViewProps) => {
+  const [questions, setQuestions] = useState<QuizQuestion[]>([]);
+  const [loading, setLoading] = useState(true);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
   const [score, setScore] = useState(0);
   const [showResult, setShowResult] = useState(false);
   const [answered, setAnswered] = useState(false);
+
+  const fetchQuiz = async () => {
+    setLoading(true);
+    try {
+      const { data, error } = await supabase.functions.invoke("generate-quiz", {
+        body: { subject: subject.name, topic: topic || subject.name },
+      });
+      if (error) throw error;
+      if (data?.questions?.length) {
+        setQuestions(data.questions);
+      } else {
+        throw new Error("No questions returned");
+      }
+    } catch (e: any) {
+      console.error("Quiz fetch error:", e);
+      toast.error(e?.message || "Failed to generate quiz. Please try again.");
+    }
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    fetchQuiz();
+  }, []);
 
   const current = questions[currentIndex];
   const isCorrect = selectedAnswer === current?.correctIndex;
@@ -95,9 +79,45 @@ const QuizView = ({ subject, onBack }: QuizViewProps) => {
     setScore(0);
     setShowResult(false);
     setAnswered(false);
+    fetchQuiz();
   };
 
   const Icon = subject.icon;
+
+  if (loading) {
+    return (
+      <div className="flex h-[100dvh] flex-col bg-background">
+        <div className="flex items-center gap-3 border-b border-border bg-card px-4 py-3">
+          <Button variant="ghost" size="icon" onClick={onBack}>
+            <ArrowLeft className="h-5 w-5" />
+          </Button>
+          <h2 className="font-heading font-semibold text-card-foreground">Generating Quiz...</h2>
+        </div>
+        <div className="flex flex-1 flex-col items-center justify-center gap-4">
+          <Loader2 className="h-10 w-10 animate-spin text-primary" />
+          <p className="text-muted-foreground text-sm">Creating WAEC-style questions for you...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!questions.length) {
+    return (
+      <div className="flex h-[100dvh] flex-col bg-background">
+        <div className="flex items-center gap-3 border-b border-border bg-card px-4 py-3">
+          <Button variant="ghost" size="icon" onClick={onBack}>
+            <ArrowLeft className="h-5 w-5" />
+          </Button>
+          <h2 className="font-heading font-semibold text-card-foreground">Quiz</h2>
+        </div>
+        <div className="flex flex-1 flex-col items-center justify-center gap-4 px-6">
+          <p className="text-muted-foreground text-center">Couldn't generate quiz questions. Please go back and try again.</p>
+          <Button onClick={onBack} variant="outline">Go Back</Button>
+        </div>
+      </div>
+    );
+  }
+
   const percentage = Math.round((score / questions.length) * 100);
 
   if (isFinished) {
@@ -136,7 +156,6 @@ const QuizView = ({ subject, onBack }: QuizViewProps) => {
 
   return (
     <div className="flex h-[100dvh] flex-col bg-background">
-      {/* Header */}
       <div className="flex items-center gap-3 border-b border-border bg-card px-4 py-3">
         <Button variant="ghost" size="icon" onClick={onBack}>
           <ArrowLeft className="h-5 w-5" />
@@ -150,12 +169,10 @@ const QuizView = ({ subject, onBack }: QuizViewProps) => {
         </span>
       </div>
 
-      {/* Progress bar */}
       <div className="h-1 bg-muted">
         <div className="h-full hero-gradient transition-all duration-300" style={{ width: `${((currentIndex + 1) / questions.length) * 100}%` }} />
       </div>
 
-      {/* Question */}
       <div className="flex-1 overflow-y-auto px-4 py-6">
         <motion.div key={current.id} initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }}>
           <p className="mb-6 font-heading text-lg font-semibold text-foreground leading-snug">{current.question}</p>
@@ -195,7 +212,6 @@ const QuizView = ({ subject, onBack }: QuizViewProps) => {
         </motion.div>
       </div>
 
-      {/* Next button */}
       {answered && (
         <div className="border-t border-border bg-card px-4 py-3">
           <Button onClick={handleNext} className="w-full hero-gradient text-primary-foreground font-semibold">
