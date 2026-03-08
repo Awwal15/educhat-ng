@@ -69,8 +69,8 @@ const Index = () => {
                 className="h-14 w-auto drop-shadow-lg"
               />
               <div className="flex items-center gap-2">
-                <GraduationCap className="h-6 w-6 text-primary-foreground" />
-                <span className="font-heading text-lg font-bold text-primary-foreground">EduChat NG</span>
+                <GraduationCap className="h-8 w-8 text-primary-foreground" />
+                <span className="font-heading text-2xl font-extrabold text-primary-foreground">EduChat NG</span>
               </div>
               <div className="flex items-center gap-2">
                 <img
