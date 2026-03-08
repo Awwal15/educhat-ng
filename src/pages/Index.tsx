@@ -1,48 +1,14 @@
-import { useState } from "react";
-import { GraduationCap, BookOpen, Sparkles } from "lucide-react";
-import { subjects, Subject } from "@/data/subjects";
-import SubjectCard from "@/components/SubjectCard";
-import LearningChat from "@/components/LearningChat";
-import QuizView from "@/components/QuizView";
+import { GraduationCap, BookOpen, Sparkles, ArrowRight } from "lucide-react";
 import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
+import { Button } from "@/components/ui/button";
 import heroBg from "@/assets/hero-bg.jpg";
 import coatOfArms from "@/assets/nigeria-coat-of-arms.png";
 import waecLogo from "@/assets/waec-logo.png";
 import necoLogo from "@/assets/neco-logo.png";
 
-type View = "home" | "chat" | "quiz";
-
 const Index = () => {
-  const [view, setView] = useState<View>("home");
-  const [selectedSubject, setSelectedSubject] = useState<Subject | null>(null);
-  const [quizTopic, setQuizTopic] = useState<string>("");
-
-  const handleSelectSubject = (subject: Subject) => {
-    setSelectedSubject(subject);
-    setView("chat");
-  };
-
-  if (view === "quiz" && selectedSubject) {
-    return <QuizView subject={selectedSubject} topic={quizTopic} onBack={() => setView("chat")} />;
-  }
-
-  if (view === "chat" && selectedSubject) {
-    return (
-      <LearningChat
-        subject={selectedSubject}
-        onBack={() => {
-          setView("home");
-          setSelectedSubject(null);
-        }}
-        onStartQuiz={(messages) => {
-          const userMessages = messages.filter((m) => m.role === "user");
-          const topic = userMessages.map((m) => m.content).join(", ");
-          setQuizTopic(topic || selectedSubject.name);
-          setView("quiz");
-        }}
-      />
-    );
-  }
+  const navigate = useNavigate();
 
   return (
     <div className="min-h-[100dvh] bg-background">
@@ -122,30 +88,29 @@ const Index = () => {
                 SS1–SS3
               </div>
             </motion.div>
+
+            {/* CTA Button */}
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.45 }}
+              className="flex justify-center mt-8"
+            >
+              <Button
+                size="lg"
+                onClick={() => navigate("/subjects")}
+                className="rounded-full px-8 py-6 text-base font-bold shadow-lg gap-2"
+              >
+                Start Learning
+                <ArrowRight className="h-5 w-5" />
+              </Button>
+            </motion.div>
           </div>
         </div>
       </div>
 
-      {/* Subjects Section */}
-      <div className="container max-w-lg mx-auto px-4 -mt-6">
-        <div className="rounded-2xl bg-card card-shadow p-5">
-          <h2 className="font-heading text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-4 flex items-center gap-2">
-            <BookOpen className="h-4 w-4" />
-            Choose a Subject
-          </h2>
-          <div className="space-y-3">
-            {subjects.map((subject, i) => (
-              <SubjectCard
-                key={subject.id}
-                subject={subject}
-                index={i}
-                onClick={() => handleSelectSubject(subject)}
-              />
-            ))}
-          </div>
-        </div>
-
-        {/* Footer */}
+      {/* Footer */}
+      <div className="container max-w-lg mx-auto px-4">
         <div className="text-center mt-8 pb-8">
           <div className="flex items-center justify-center gap-4 mb-2">
             <img src={coatOfArms} alt="" className="h-8 w-auto opacity-40" />
