@@ -1,4 +1,4 @@
-import { BookOpen, FlaskConical, Calculator, Languages, Globe, Leaf, Atom, PenTool } from "lucide-react";
+import { BookOpen, FlaskConical, Calculator, Languages, Globe, Leaf, Atom, PenTool, TrendingUp } from "lucide-react";
 
 export interface Subject {
   id: string;
