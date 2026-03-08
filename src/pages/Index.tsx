@@ -150,6 +150,7 @@ const Index = () => {
           <div className="flex items-center justify-center gap-4 mb-2">
             <img src={coatOfArms} alt="" className="h-8 w-auto opacity-40" />
             <img src={waecLogo} alt="" className="h-8 w-auto opacity-40" />
+            <img src={necoLogo} alt="" className="h-8 w-auto opacity-40" />
           </div>
           <p className="text-xs text-muted-foreground">
             Built for SS1–SS3 students preparing for WAEC 📚
