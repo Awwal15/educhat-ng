@@ -34,16 +34,16 @@ const Index = () => {
                 alt="Nigeria Coat of Arms"
                 className="h-16 sm:h-20 w-auto drop-shadow-lg"
               />
-              <div className="flex items-center gap-1.5 sm:gap-2">
-                <GraduationCap className="h-6 w-6 sm:h-8 sm:w-8 text-primary-foreground" />
-                <span className="font-heading text-lg sm:text-2xl font-extrabold text-primary-foreground whitespace-nowrap">EduChat NG</span>
-              </div>
-              <div className="flex items-center justify-center gap-6 w-full">
+              <div className="flex items-center justify-center gap-4">
                 <img
                   src={waecLogo}
                   alt="WAEC Logo"
                   className="h-12 sm:h-16 w-auto drop-shadow-lg"
                 />
+                <div className="flex items-center gap-1.5 sm:gap-2">
+                  <GraduationCap className="h-6 w-6 sm:h-8 sm:w-8 text-primary-foreground" />
+                  <span className="font-heading text-lg sm:text-2xl font-extrabold text-primary-foreground whitespace-nowrap">EduChat NG</span>
+                </div>
                 <img
                   src={necoLogo}
                   alt="NECO Logo"
