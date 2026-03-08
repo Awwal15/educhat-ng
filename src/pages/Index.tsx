@@ -66,22 +66,22 @@ const Index = () => {
               <img
                 src={coatOfArms}
                 alt="Nigeria Coat of Arms"
-                className="h-14 w-auto drop-shadow-lg"
+                className="h-10 sm:h-14 w-auto drop-shadow-lg flex-shrink-0"
               />
-              <div className="flex items-center gap-2">
-                <GraduationCap className="h-8 w-8 text-primary-foreground" />
-                <span className="font-heading text-2xl font-extrabold text-primary-foreground">EduChat NG</span>
+              <div className="flex items-center gap-1.5 sm:gap-2 flex-shrink-0">
+                <GraduationCap className="h-6 w-6 sm:h-8 sm:w-8 text-primary-foreground" />
+                <span className="font-heading text-lg sm:text-2xl font-extrabold text-primary-foreground whitespace-nowrap">EduChat NG</span>
               </div>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-1.5 sm:gap-2 flex-shrink-0">
                 <img
                   src={waecLogo}
                   alt="WAEC Logo"
-                  className="h-14 w-auto drop-shadow-lg"
+                  className="h-10 sm:h-14 w-auto drop-shadow-lg"
                 />
                 <img
                   src={necoLogo}
                   alt="NECO Logo"
-                  className="h-14 w-auto drop-shadow-lg"
+                  className="h-10 sm:h-14 w-auto drop-shadow-lg"
                 />
               </div>
             </motion.div>
