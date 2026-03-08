@@ -8,6 +8,7 @@ import { motion } from "framer-motion";
 import heroBg from "@/assets/hero-bg.jpg";
 import coatOfArms from "@/assets/nigeria-coat-of-arms.png";
 import waecLogo from "@/assets/waec-logo.png";
+import necoLogo from "@/assets/neco-logo.png";
 
 type View = "home" | "chat" | "quiz";
 
