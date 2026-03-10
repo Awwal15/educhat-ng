@@ -109,6 +109,33 @@ const Index = () => {
         </div>
       </div>
 
+      {/* Feature Cards */}
+      <div className="container max-w-lg mx-auto px-4 -mt-6 relative z-10">
+        <div className="grid grid-cols-1 gap-3">
+          {[
+            { icon: Sparkles, title: "Personalized Learning", desc: "Adapts to the student's pace." },
+            { icon: BookOpen, title: "24/7 Access", desc: "Tutoring available even outside school hours." },
+            { icon: GraduationCap, title: "Data-Light", desc: "Optimized for low-bandwidth connections." },
+          ].map((feature, i) => (
+            <motion.div
+              key={feature.title}
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.55 + i * 0.1 }}
+              className="flex items-center gap-3 rounded-lg bg-card p-3.5 shadow-sm border border-border"
+            >
+              <div className="rounded-md bg-primary/10 p-2">
+                <feature.icon className="h-4 w-4 text-primary" />
+              </div>
+              <div>
+                <h3 className="text-sm font-semibold text-card-foreground">{feature.title}</h3>
+                <p className="text-xs text-muted-foreground">{feature.desc}</p>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+      </div>
+
       {/* Footer */}
       <div className="container max-w-lg mx-auto px-4">
         <div className="text-center mt-8 pb-8">
