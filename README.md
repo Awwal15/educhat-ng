@@ -2,16 +2,16 @@
 **EduChat-NG:** AI-Powered Tutor for Nigerian Students
 3MTT NextGen Knowledge Showcase | Education Pillar
 
-**Project Overview**
+## **Project Overview**
 EduChat-NG is a specialized AI tutoring platform designed to bridge the educational gap in Nigeria. Built as part of the 3MTT NextGen Cohort, this tool provides students with 24/7 access to personalized learning assistance, specifically tuned to help with local curricula and exam preparation (WAEC/NECO/JAMB).
 
-**Key Features**
+## **Key Features**
 **AI-Driven Tutoring:** Real-time, interactive responses to complex academic questions.
 **Curriculum Focused:** Engineered to prioritize Nigerian educational contexts and terminology.
 **Responsive UI:** A mobile-first design ensuring students can learn on any device, even with low-end smartphones.
 **Clean Interface:** Minimalist design to reduce cognitive load and focus on learning.
 
-**Technical Stack**
+## **Technical Stack**
 This project demonstrates the technical skills acquired during the 3MTT NextGen track:
 **Framework:** React + Vite
 **Styling:** Tailwind CSS (for modern, utility-first styling)
