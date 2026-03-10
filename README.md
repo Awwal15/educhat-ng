@@ -7,15 +7,21 @@ EduChat-NG is a specialized AI tutoring platform designed to bridge the educatio
 
 ## **Key Features**
 **AI-Driven Tutoring:** Real-time, interactive responses to complex academic questions.
+
 **Curriculum Focused:** Engineered to prioritize Nigerian educational contexts and terminology.
+
 **Responsive UI:** A mobile-first design ensuring students can learn on any device, even with low-end smartphones.
+
 **Clean Interface:** Minimalist design to reduce cognitive load and focus on learning.
 
 ## **Technical Stack**
 This project demonstrates the technical skills acquired during the 3MTT NextGen track:
 **Framework:** React + Vite
+
 **Styling:** Tailwind CSS (for modern, utility-first styling)
+
 **Build Tool:** Lovable / GPT-Engineer
+
 **AI Integration:** Meaningful application of Large Language Models (LLMs) for educational scaffolding.
 
 **URL**: https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID
