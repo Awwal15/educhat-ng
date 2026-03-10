@@ -150,6 +150,9 @@ const Index = () => {
           <p className="text-xs text-muted-foreground mt-1">
             Unity and Faith, Peace and Progress
           </p>
+          <p className="text-xs text-muted-foreground mt-3 border-t border-border pt-3">
+            Developed by <span className="font-medium text-foreground">Lawal Wahab</span> | 3MTT NextGen Cohort | Software Development
+          </p>
         </div>
       </div>
     </div>
