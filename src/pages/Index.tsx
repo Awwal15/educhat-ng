@@ -110,8 +110,8 @@ const Index = () => {
       </div>
 
       {/* Feature Cards */}
-      <div className="container max-w-lg mx-auto px-4 -mt-6 relative z-10">
-        <div className="grid grid-cols-1 gap-3">
+      <div className="container max-w-2xl mx-auto px-4 -mt-6 relative z-10">
+        <div className="grid grid-cols-3 gap-3">
           {[
             { icon: Sparkles, title: "Personalized Learning", desc: "Adapts to the student's pace." },
             { icon: BookOpen, title: "24/7 Access", desc: "Tutoring available even outside school hours." },
