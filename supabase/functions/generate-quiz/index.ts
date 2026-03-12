@@ -13,17 +13,20 @@ serve(async (req) => {
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY is not configured");
 
-    const systemPrompt = `You are a WAEC quiz generator for Nigerian secondary school students.
+    const systemPrompt = `You are a WAEC/NECO/JAMB past question quiz generator for Nigerian secondary school students.
 Generate exactly 5 multiple-choice questions about the given topic in ${subject}.
 
-RULES:
-- Questions should be at WAEC difficulty level (SS1-SS3)
-- Use Nigerian context where possible (Naira, Nigerian cities, local examples)
-- Each question must have exactly 4 options (A-D)
-- Provide a clear, educational explanation for each correct answer
-- Vary difficulty: 2 easy, 2 medium, 1 hard`;
+CRITICAL RULES:
+- Questions MUST be modeled after actual WAEC, NECO, and JAMB past questions in style, wording, and difficulty
+- Use the exact phrasing style of these exams (e.g., "Which of the following...", "The process by which...", "Calculate the...")
+- Questions should reflect the WAEC/NECO syllabus for SS1-SS3
+- Use Nigerian context where possible (Naira, Nigerian cities, local examples, Nigerian historical figures)
+- Each question must have exactly 4 options (A-D) — distractors should be realistic, as in actual past papers
+- Provide a clear, educational explanation for each correct answer, referencing the syllabus topic
+- Vary difficulty: 2 easy (typical NECO standard), 2 medium (WAEC standard), 1 hard (JAMB/competitive level)
+- Where applicable, mention which exam year or paper the question style is drawn from (e.g., "Similar to WAEC 2019 Paper 1")`;
 
-    const userPrompt = `Generate a quiz about: ${topic || subject}. Return the questions.`;
+    const userPrompt = `Generate a quiz about: ${topic || subject}. Base the questions on WAEC, NECO, and JAMB past question patterns. Return the questions.`;
 
     const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
