@@ -21,11 +21,29 @@ interface LearningChatProps {
 const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/learn-chat`;
 
 const LearningChat = ({ subject, onBack, onStartQuiz }: LearningChatProps) => {
+  const sampleQuestions: Record<string, string[]> = {
+    Mathematics: ["Explain quadratic equations", "How do I solve simultaneous equations?", "What is the formula for compound interest?"],
+    "English Language": ["What are the types of clauses?", "Explain the use of reported speech", "How do I write a formal letter?"],
+    Physics: ["What is Newton's second law of motion?", "Explain the concept of electromagnetic induction", "How does a transformer work?"],
+    Chemistry: ["What is the periodic table?", "Explain the process of electrolysis", "What are the properties of alkanes?"],
+    Biology: ["What is photosynthesis?", "Explain mitosis and meiosis", "What are the components of blood?"],
+    "Literature in English": ["What are the themes in Wole Soyinka's works?", "Explain the use of irony in prose", "What is a soliloquy in drama?"],
+    Geography: ["What are the types of rocks?", "Explain the climate zones of Nigeria", "What causes desertification in the Sahel?"],
+    Government: ["How does the Nigerian government work?", "What are the features of federalism?", "Explain the separation of powers"],
+    Economics: ["What is the law of demand and supply?", "Explain inflation and its effects on Nigeria", "What are the factors of production?"],
+  };
+
+  const questions = sampleQuestions[subject.name] || [
+    `What are the key topics in ${subject.name}?`,
+    `Explain a basic concept in ${subject.name}`,
+    `How is ${subject.name} tested in WAEC?`,
+  ];
+
   const [messages, setMessages] = useState<Message[]>([
     {
       id: "welcome",
       role: "assistant",
-      content: `Welcome! 👋 I'm your ${subject.name} tutor. Ask me anything about ${subject.name} — I'll explain it simply with examples you can relate to as a Nigerian student.\n\nFor example, you can ask:\n- "What is photosynthesis?"\n- "Explain quadratic equations"\n- "How does the Nigerian government work?"\n\nWhat would you like to learn today?`,
+      content: `Welcome! 👋 I'm your ${subject.name} tutor. Ask me anything about ${subject.name} — I'll explain it simply with examples you can relate to as a Nigerian student.\n\nFor example, you can ask:\n- "${questions[0]}"\n- "${questions[1]}"\n- "${questions[2]}"\n\nWhat would you like to learn today?`,
     },
   ]);
   const [input, setInput] = useState("");
