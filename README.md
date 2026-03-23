@@ -239,6 +239,6 @@ This project was developed for the **3MTT NextGen Knowledge Showcase** as an edu
 
 [![Live Demo](https://img.shields.io/badge/Try%20EduChat%20NG-educhat--ng.lovable.app-1B7A3E?style=for-the-badge)](https://educhat-ng.lovable.app)
 
-*3MTT NextGen Knowledge Showcase | Education Pillar | 2025*
+*3MTT NextGen Knowledge Showcase | Education Pillar | 2026*
 
 </div>
