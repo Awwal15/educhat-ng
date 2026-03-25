@@ -204,10 +204,10 @@ const QuizView = ({ subject, topic, onBack }: QuizViewProps) => {
           </div>
 
           {answered && (
-            <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="mt-4 rounded-xl bg-accent p-4">
+            <div className="mt-4 rounded-xl bg-accent p-4 animate-fade-in">
               <p className="text-sm font-semibold text-accent-foreground mb-1">{isCorrect ? "Correct! ✅" : "Not quite ❌"}</p>
               <p className="text-sm text-muted-foreground leading-relaxed">{current.explanation}</p>
-            </motion.div>
+            </div>
           )}
         </motion.div>
       </div>
