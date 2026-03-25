@@ -174,7 +174,7 @@ const QuizView = ({ subject, topic, onBack }: QuizViewProps) => {
       </div>
 
       <div className="flex-1 overflow-y-auto px-4 py-6">
-        <motion.div key={current.id} initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }}>
+        <div key={current.id} className="animate-fade-in">
           <p className="mb-6 font-heading text-lg font-semibold text-foreground leading-snug">{current.question}</p>
 
           <div className="space-y-3">
