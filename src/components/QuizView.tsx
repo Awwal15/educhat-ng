@@ -130,7 +130,7 @@ const QuizView = ({ subject, topic, onBack }: QuizViewProps) => {
           <h2 className="font-heading font-semibold text-card-foreground">Quiz Results</h2>
         </div>
         <div className="flex flex-1 flex-col items-center justify-center gap-6 px-6">
-          <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} className="text-center">
+          <div className="text-center animate-fade-in">
             <div className={`mx-auto mb-4 flex h-24 w-24 items-center justify-center rounded-full ${percentage >= 60 ? "bg-primary/10" : "bg-destructive/10"}`}>
               <span className={`font-heading text-3xl font-bold ${percentage >= 60 ? "text-primary" : "text-destructive"}`}>{percentage}%</span>
             </div>
@@ -140,7 +140,7 @@ const QuizView = ({ subject, topic, onBack }: QuizViewProps) => {
             <p className="mt-2 text-muted-foreground">
               You scored {score} out of {questions.length} in {subject.name}
             </p>
-          </motion.div>
+          </div>
           <div className="flex gap-3">
             <Button variant="outline" onClick={handleRestart} className="gap-2">
               <RotateCcw className="h-4 w-4" /> Try Again
