@@ -4,7 +4,6 @@ import { subjects, Subject } from "@/data/subjects";
 import SubjectCard from "@/components/SubjectCard";
 import LearningChat from "@/components/LearningChat";
 import QuizView from "@/components/QuizView";
-import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 
@@ -56,11 +55,7 @@ const Subjects = () => {
           </h1>
         </div>
 
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="space-y-3"
-        >
+        <div className="space-y-3">
           {subjects.map((subject, i) => (
             <SubjectCard
               key={subject.id}
@@ -69,7 +64,7 @@ const Subjects = () => {
               onClick={() => handleSelectSubject(subject)}
             />
           ))}
-        </motion.div>
+        </div>
       </div>
     </div>
   );
