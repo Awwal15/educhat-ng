@@ -1,5 +1,4 @@
 import { Subject } from "@/data/subjects";
-import { motion } from "framer-motion";
 
 interface SubjectCardProps {
   subject: Subject;
@@ -11,12 +10,10 @@ const SubjectCard = ({ subject, onClick, index }: SubjectCardProps) => {
   const Icon = subject.icon;
 
   return (
-    <motion.button
-      initial={{ opacity: 0, y: 16 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: index * 0.06, duration: 0.35 }}
+    <button
       onClick={onClick}
-      className="flex items-start gap-4 rounded-lg bg-card p-4 text-left card-shadow hover:card-hover-shadow transition-shadow duration-200 w-full"
+      className="flex items-start gap-4 rounded-lg bg-card p-4 text-left card-shadow hover:card-hover-shadow transition-shadow duration-200 w-full animate-fade-in"
+      style={{ animationDelay: `${index * 60}ms`, animationFillMode: 'both' }}
     >
       <div className={`rounded-lg p-2.5 ${subject.color}`}>
         <Icon className="h-5 w-5" />
@@ -25,7 +22,7 @@ const SubjectCard = ({ subject, onClick, index }: SubjectCardProps) => {
         <h3 className="font-heading font-semibold text-card-foreground">{subject.name}</h3>
         <p className="mt-0.5 text-sm text-muted-foreground leading-snug">{subject.description}</p>
       </div>
-    </motion.button>
+    </button>
   );
 };
 

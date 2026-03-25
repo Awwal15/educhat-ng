@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { ArrowLeft, CheckCircle2, XCircle, RotateCcw, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Subject } from "@/data/subjects";
-import { motion } from "framer-motion";
+
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
@@ -130,7 +130,7 @@ const QuizView = ({ subject, topic, onBack }: QuizViewProps) => {
           <h2 className="font-heading font-semibold text-card-foreground">Quiz Results</h2>
         </div>
         <div className="flex flex-1 flex-col items-center justify-center gap-6 px-6">
-          <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} className="text-center">
+          <div className="text-center animate-fade-in">
             <div className={`mx-auto mb-4 flex h-24 w-24 items-center justify-center rounded-full ${percentage >= 60 ? "bg-primary/10" : "bg-destructive/10"}`}>
               <span className={`font-heading text-3xl font-bold ${percentage >= 60 ? "text-primary" : "text-destructive"}`}>{percentage}%</span>
             </div>
@@ -140,7 +140,7 @@ const QuizView = ({ subject, topic, onBack }: QuizViewProps) => {
             <p className="mt-2 text-muted-foreground">
               You scored {score} out of {questions.length} in {subject.name}
             </p>
-          </motion.div>
+          </div>
           <div className="flex gap-3">
             <Button variant="outline" onClick={handleRestart} className="gap-2">
               <RotateCcw className="h-4 w-4" /> Try Again
@@ -174,7 +174,7 @@ const QuizView = ({ subject, topic, onBack }: QuizViewProps) => {
       </div>
 
       <div className="flex-1 overflow-y-auto px-4 py-6">
-        <motion.div key={current.id} initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }}>
+        <div key={current.id} className="animate-fade-in">
           <p className="mb-6 font-heading text-lg font-semibold text-foreground leading-snug">{current.question}</p>
 
           <div className="space-y-3">
@@ -204,12 +204,12 @@ const QuizView = ({ subject, topic, onBack }: QuizViewProps) => {
           </div>
 
           {answered && (
-            <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="mt-4 rounded-xl bg-accent p-4">
+            <div className="mt-4 rounded-xl bg-accent p-4 animate-fade-in">
               <p className="text-sm font-semibold text-accent-foreground mb-1">{isCorrect ? "Correct! ✅" : "Not quite ❌"}</p>
               <p className="text-sm text-muted-foreground leading-relaxed">{current.explanation}</p>
-            </motion.div>
+            </div>
           )}
-        </motion.div>
+        </div>
       </div>
 
       {answered && (

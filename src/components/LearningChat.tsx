@@ -3,7 +3,7 @@ import { ArrowLeft, Send, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Subject } from "@/data/subjects";
 import ReactMarkdown from "react-markdown";
-import { motion, AnimatePresence } from "framer-motion";
+
 import { toast } from "sonner";
 
 interface Message {
@@ -167,13 +167,10 @@ const LearningChat = ({ subject, onBack, onStartQuiz }: LearningChatProps) => {
 
       {/* Messages */}
       <div ref={scrollRef} className="flex-1 overflow-y-auto px-4 py-4 space-y-4">
-        <AnimatePresence>
-          {messages.map((msg) => (
-            <motion.div
+        {messages.map((msg) => (
+            <div
               key={msg.id}
-              initial={{ opacity: 0, y: 8 }}
-              animate={{ opacity: 1, y: 0 }}
-              className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}
+              className={`flex animate-fade-in ${msg.role === "user" ? "justify-end" : "justify-start"}`}
             >
               <div
                 className={`max-w-[85%] rounded-2xl px-4 py-3 text-sm leading-relaxed ${
@@ -190,15 +187,14 @@ const LearningChat = ({ subject, onBack, onStartQuiz }: LearningChatProps) => {
                   msg.content
                 )}
               </div>
-            </motion.div>
+            </div>
           ))}
-        </AnimatePresence>
         {isLoading && messages[messages.length - 1]?.role !== "assistant" && (
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex justify-start">
+          <div className="flex justify-start animate-fade-in">
             <div className="bg-card card-shadow rounded-2xl rounded-bl-md px-4 py-3">
               <Loader2 className="h-5 w-5 animate-spin text-primary" />
             </div>
-          </motion.div>
+          </div>
         )}
       </div>
 
