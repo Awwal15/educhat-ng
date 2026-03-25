@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { ArrowLeft, CheckCircle2, XCircle, RotateCcw, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Subject } from "@/data/subjects";
-import { motion } from "framer-motion";
+
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
