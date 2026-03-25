@@ -209,7 +209,7 @@ const QuizView = ({ subject, topic, onBack }: QuizViewProps) => {
               <p className="text-sm text-muted-foreground leading-relaxed">{current.explanation}</p>
             </div>
           )}
-        </motion.div>
+        </div>
       </div>
 
       {answered && (
