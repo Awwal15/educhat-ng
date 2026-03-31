@@ -27,7 +27,9 @@ RULES: Simple language for rural Nigerian teens. Use Nigerian examples (₦, loc
           { role: "system", content: systemPrompt },
           ...messages,
         ],
+        model: "google/gemini-2.5-flash-lite",
         stream: true,
+        max_tokens: 600,
       }),
     });
 
