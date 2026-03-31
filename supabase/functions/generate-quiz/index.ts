@@ -13,18 +13,7 @@ serve(async (req) => {
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY is not configured");
 
-    const systemPrompt = `You are a WAEC/NECO/JAMB past question quiz generator for Nigerian secondary school students.
-Generate exactly 5 multiple-choice questions about the given topic in ${subject}.
-
-CRITICAL RULES:
-- Questions MUST be modeled after actual WAEC, NECO, and JAMB past questions in style, wording, and difficulty
-- Use the exact phrasing style of these exams (e.g., "Which of the following...", "The process by which...", "Calculate the...")
-- Questions should reflect the WAEC/NECO syllabus for SS1-SS3
-- Use Nigerian context where possible (Naira, Nigerian cities, local examples, Nigerian historical figures)
-- Each question must have exactly 4 options (A-D) — distractors should be realistic, as in actual past papers
-- Provide a clear, educational explanation for each correct answer, referencing the syllabus topic
-- Vary difficulty: 2 easy (typical NECO standard), 2 medium (WAEC standard), 1 hard (JAMB/competitive level)
-- Where applicable, mention which exam year or paper the question style is drawn from (e.g., "Similar to WAEC 2019 Paper 1")`;
+    const systemPrompt = `Generate 5 WAEC/NECO/JAMB-style MCQs for ${subject} (SS1-SS3). 4 options each, Nigerian context, mix easy/medium/hard. Brief explanations.`;
 
     const userPrompt = `Generate a quiz about: ${topic || subject}. Base the questions on WAEC, NECO, and JAMB past question patterns. Return the questions.`;
 
