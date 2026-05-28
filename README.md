@@ -107,8 +107,7 @@ EduChat NG currently covers **9 core WAEC and NECO subjects** for SS1–SS3 stud
 | 6 | **Economics** | Micro & Macroeconomics, Supply & Demand, Nigerian Economy |
 | 7 | **Government** | Nigerian Constitution, Arms of Government, Electoral Process |
 | 8 | **Literature in English** | Prose, Poetry, Drama — African & Nigerian texts |
-| 9 | **Civic Education** | Citizenship, Human Rights, Democracy & Governance |
-
+| 9 | **Geography** | Physical Geography, Human Geography, Map Reading & Interpretation, Environmental Management |
 ---
 
 ## 🔄 How It Works
