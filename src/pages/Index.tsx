@@ -1,12 +1,16 @@
-import { GraduationCap, BookOpen, Sparkles, ArrowRight } from "lucide-react";
+import { GraduationCap, BookOpen, Sparkles, ArrowRight, User, LogIn } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import coatOfArms from "@/assets/nigeria-coat-of-arms.png";
 import waecLogo from "@/assets/waec-logo.png";
 import necoLogo from "@/assets/neco-logo.png";
+import { useAuth } from "@/components/AuthProvider";
 
 const Index = () => {
   const navigate = useNavigate();
+  const { user } = useAuth();
+
+
 
   return (
     <div className="min-h-[100dvh] bg-background">
