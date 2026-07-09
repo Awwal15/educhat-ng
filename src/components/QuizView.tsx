@@ -63,15 +63,29 @@ const QuizView = ({ subject, topic, onBack }: QuizViewProps) => {
     if (index === current.correctIndex) setScore((s) => s + 1);
   };
 
-  const handleNext = () => {
+  const handleNext = async () => {
     if (currentIndex < questions.length - 1) {
       setCurrentIndex((i) => i + 1);
       setSelectedAnswer(null);
       setAnswered(false);
     } else {
       setShowResult(true);
+      // Best-effort progress logging (silent if signed out)
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        const today = new Date().toISOString().slice(0, 10);
+        await supabase.from("quiz_attempts" as any).insert({
+          user_id: user.id,
+          subject: subject.name,
+          topic: topic || subject.name,
+          score,
+          total: questions.length,
+        });
+        await supabase.from("daily_activity" as any).upsert({ user_id: user.id, activity_date: today });
+      }
     }
   };
+
 
   const handleRestart = () => {
     setCurrentIndex(0);
