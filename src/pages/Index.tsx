@@ -83,7 +83,7 @@ const Index = () => {
             </div>
 
             {/* CTA Button */}
-            <div className="flex justify-center mt-8 animate-fade-in" style={{ animationDelay: '450ms', animationFillMode: 'both' }}>
+            <div className="flex flex-col items-center gap-3 mt-8 animate-fade-in" style={{ animationDelay: '450ms', animationFillMode: 'both' }}>
               <Button
                 size="lg"
                 onClick={() => navigate("/subjects")}
@@ -92,7 +92,16 @@ const Index = () => {
                 Start Learning
                 <ArrowRight className="h-5 w-5" />
               </Button>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => navigate(user ? "/profile" : "/auth")}
+                className="text-primary-foreground/90 hover:text-primary-foreground hover:bg-primary-foreground/10 gap-2"
+              >
+                {user ? <><User className="h-4 w-4" /> My Profile</> : <><LogIn className="h-4 w-4" /> Sign in to save progress</>}
+              </Button>
             </div>
+
           </div>
         </div>
       </div>
