@@ -14,7 +14,132 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      chat_sessions: {
+        Row: {
+          created_at: string
+          id: string
+          message_count: number
+          subject_id: string
+          subject_name: string
+          topic: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          message_count?: number
+          subject_id: string
+          subject_name: string
+          topic?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          message_count?: number
+          subject_id?: string
+          subject_name?: string
+          topic?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      daily_activity: {
+        Row: {
+          activity_date: string
+          created_at: string
+          id: string
+          minutes_spent: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          activity_date: string
+          created_at?: string
+          id?: string
+          minutes_spent?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          activity_date?: string
+          created_at?: string
+          id?: string
+          minutes_spent?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          created_at: string
+          email: string | null
+          full_name: string | null
+          id: string
+          phone: string | null
+          school_class: string | null
+          state: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          email?: string | null
+          full_name?: string | null
+          id: string
+          phone?: string | null
+          school_class?: string | null
+          state?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          email?: string | null
+          full_name?: string | null
+          id?: string
+          phone?: string | null
+          school_class?: string | null
+          state?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      quiz_attempts: {
+        Row: {
+          created_at: string
+          id: string
+          score: number
+          subject_id: string
+          subject_name: string
+          topic: string | null
+          total: number
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          score: number
+          subject_id: string
+          subject_name: string
+          topic?: string | null
+          total: number
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          score?: number
+          subject_id?: string
+          subject_name?: string
+          topic?: string | null
+          total?: number
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
