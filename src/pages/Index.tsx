@@ -86,12 +86,13 @@ const Index = () => {
             <div className="flex flex-col items-center gap-3 mt-8 animate-fade-in" style={{ animationDelay: '450ms', animationFillMode: 'both' }}>
               <Button
                 size="lg"
-                onClick={() => navigate("/subjects")}
+                onClick={() => navigate(user ? "/subjects" : "/auth")}
                 className="rounded-full px-8 py-6 text-base font-bold shadow-lg gap-2"
               >
-                Start Learning
+                {user ? "Start Learning" : "Sign in to Start Learning"}
                 <ArrowRight className="h-5 w-5" />
               </Button>
+
               <Button
                 variant="secondary"
                 size="sm"
