@@ -1,4 +1,4 @@
-import { GraduationCap, BookOpen, Sparkles, ArrowRight, User, LogIn } from "lucide-react";
+import { GraduationCap, BookOpen, Sparkles, ArrowRight } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import coatOfArms from "@/assets/nigeria-coat-of-arms.png";
@@ -91,15 +91,6 @@ const Index = () => {
               >
                 {user ? "Start Learning" : "Sign in to Start Learning"}
                 <ArrowRight className="h-5 w-5" />
-              </Button>
-
-              <Button
-                variant="secondary"
-                size="sm"
-                onClick={() => navigate(user ? "/profile" : "/auth")}
-                className="rounded-full font-bold text-primary gap-2 shadow-sm"
-              >
-                {user ? <><User className="h-4 w-4" /> My Profile</> : <><LogIn className="h-4 w-4" /> Sign in to save progress</>}
               </Button>
             </div>
 
