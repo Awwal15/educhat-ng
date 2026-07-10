@@ -93,10 +93,10 @@ const Index = () => {
                 <ArrowRight className="h-5 w-5" />
               </Button>
               <Button
-                variant="ghost"
+                variant="secondary"
                 size="sm"
                 onClick={() => navigate(user ? "/profile" : "/auth")}
-                className="text-primary-foreground/90 hover:text-primary-foreground hover:bg-primary-foreground/10 gap-2"
+                className="rounded-full font-bold text-primary gap-2 shadow-sm"
               >
                 {user ? <><User className="h-4 w-4" /> My Profile</> : <><LogIn className="h-4 w-4" /> Sign in to save progress</>}
               </Button>
