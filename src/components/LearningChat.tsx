@@ -258,6 +258,21 @@ const LearningChat = ({ subject, onBack, onStartQuiz }: LearningChatProps) => {
 
       {/* Input */}
       <div className="border-t border-border bg-card px-4 py-3">
+        {symbols && (
+          <div className="mb-2 -mx-1 flex gap-1 overflow-x-auto pb-1" aria-label="Symbols and formula helpers">
+            {symbols.map((s) => (
+              <button
+                key={s}
+                type="button"
+                onClick={() => insertSymbol(s)}
+                className="shrink-0 min-w-8 h-8 px-2 rounded-md border border-border bg-background text-sm font-medium text-foreground hover:bg-accent active:scale-95 transition"
+                aria-label={`Insert ${s}`}
+              >
+                {s}
+              </button>
+            ))}
+          </div>
+        )}
         <form
           onSubmit={(e) => {
             e.preventDefault();
@@ -266,10 +281,11 @@ const LearningChat = ({ subject, onBack, onStartQuiz }: LearningChatProps) => {
           className="flex items-center gap-2"
         >
           <input
+            ref={inputRef}
             type="text"
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            placeholder="Ask a question..."
+            placeholder={symbols ? "Ask a question or type an equation..." : "Ask a question..."}
             className="flex-1 rounded-xl border border-input bg-background px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
           />
           <Button type="submit" size="icon" disabled={!input.trim() || isLoading} className="hero-gradient text-primary-foreground shrink-0 rounded-xl">
