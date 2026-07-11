@@ -47,6 +47,7 @@ const LearningChat = ({ subject, onBack, onStartQuiz }: LearningChatProps) => {
     });
   };
 
+  const sampleQuestions: Record<string, string[]> = {
     Mathematics: ["Explain quadratic equations", "How do I solve simultaneous equations?", "What is the formula for compound interest?"],
     "English Language": ["What are the types of clauses?", "Explain the use of reported speech", "How do I write a formal letter?"],
     Physics: ["What is Newton's second law of motion?", "Explain the concept of electromagnetic induction", "How does a transformer work?"],
