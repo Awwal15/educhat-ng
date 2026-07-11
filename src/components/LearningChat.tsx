@@ -51,10 +51,33 @@ const LearningChat = ({ subject, onBack, onStartQuiz }: LearningChatProps) => {
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
+  const { user } = useAuth();
 
   useEffect(() => {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
   }, [messages]);
+
+  // Load prior chat history for this user + subject
+  useEffect(() => {
+    if (!user) return;
+    let cancelled = false;
+    (async () => {
+      const { data } = await supabase
+        .from("chat_messages" as any)
+        .select("id, role, content")
+        .eq("user_id", user.id)
+        .eq("subject_id", subject.id)
+        .order("created_at", { ascending: true })
+        .limit(200);
+      if (cancelled || !data || data.length === 0) return;
+      setMessages((prev) => [
+        prev[0],
+        ...data.map((m: any) => ({ id: m.id, role: m.role as "user" | "assistant", content: m.content })),
+      ]);
+    })();
+    return () => { cancelled = true; };
+  }, [user, subject.id]);
+
 
   const handleSend = async () => {
     const text = input.trim();
