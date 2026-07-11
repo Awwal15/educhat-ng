@@ -57,6 +57,10 @@ const Subjects = () => {
           </h1>
         </div>
 
+        <div className="mb-4">
+          <RecentChats limit={5} onOpen={handleSelectSubject} />
+        </div>
+
         <div className="space-y-3">
           {subjects.map((subject, i) => (
             <SubjectCard
@@ -67,6 +71,7 @@ const Subjects = () => {
             />
           ))}
         </div>
+
       </div>
     </div>
   );
