@@ -1,11 +1,11 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { BookOpen, ArrowLeft } from "lucide-react";
 import { subjects, Subject } from "@/data/subjects";
 import SubjectCard from "@/components/SubjectCard";
 import LearningChat from "@/components/LearningChat";
 import QuizView from "@/components/QuizView";
 import RecentChats from "@/components/RecentChats";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 
 
@@ -13,11 +13,22 @@ type View = "list" | "chat" | "quiz";
 
 const Subjects = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [view, setView] = useState<View>("list");
   const [selectedSubject, setSelectedSubject] = useState<Subject | null>(null);
   const [quizTopic, setQuizTopic] = useState<string>("");
 
+  useEffect(() => {
+    const preselect = (location.state as any)?.subjectId as string | undefined;
+    if (preselect) {
+      const s = subjects.find((x) => x.id === preselect);
+      if (s) { setSelectedSubject(s); setView("chat"); }
+      navigate(location.pathname, { replace: true, state: null });
+    }
+  }, [location, navigate]);
+
   const handleSelectSubject = (subject: Subject) => {
+
     setSelectedSubject(subject);
     setView("chat");
   };
