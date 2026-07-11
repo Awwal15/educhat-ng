@@ -4,6 +4,8 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/components/AuthProvider";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Flame, Trophy, MessageCircle, LogOut, BookOpen } from "lucide-react";
+import RecentChats from "@/components/RecentChats";
+
 
 interface Stats {
   quizCount: number;
