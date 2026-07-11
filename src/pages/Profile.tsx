@@ -98,6 +98,15 @@ const Profile = () => {
         >
           Continue Learning →
         </Button>
+
+        <div className="mt-6">
+          <RecentChats
+            limit={8}
+            emptyLabel="Your past chats will appear here after you start learning."
+            onOpen={(s) => navigate("/subjects", { state: { subjectId: s.id } })}
+          />
+        </div>
+
       </div>
     </div>
   );
