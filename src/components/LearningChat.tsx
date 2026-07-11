@@ -159,6 +159,15 @@ const LearningChat = ({ subject, onBack, onStartQuiz }: LearningChatProps) => {
       setMessages((prev) =>
         prev.map((m) => (m.id === "streaming" ? { ...m, id: Date.now().toString() } : m))
       );
+
+      // Persist the exchange for signed-in users
+      if (user && assistantSoFar) {
+        supabase.from("chat_messages" as any).insert([
+          { user_id: user.id, subject_id: subject.id, subject_name: subject.name, role: "user", content: text },
+          { user_id: user.id, subject_id: subject.id, subject_name: subject.name, role: "assistant", content: assistantSoFar },
+        ]).then(({ error }) => { if (error) console.error("save chat:", error); });
+      }
+
     } catch (e) {
       console.error(e);
       toast.error("Failed to get response. Please try again.");
