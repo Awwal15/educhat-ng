@@ -22,6 +22,13 @@ interface LearningChatProps {
 
 const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/learn-chat`;
 
+const SCIENCE_SYMBOLS: Record<string, string[]> = {
+  Mathematics: ["×", "÷", "±", "√", "π", "²", "³", "½", "≠", "≈", "≤", "≥", "∞", "∑", "∫", "θ", "α", "β", "°", "(", ")", "^"],
+  Physics: ["×", "÷", "±", "√", "π", "²", "³", "°", "θ", "λ", "μ", "Ω", "α", "β", "Δ", "→", "≈", "≤", "≥", "^", "·"],
+  Chemistry: ["→", "⇌", "↑", "↓", "Δ", "°", "±", "₁", "₂", "₃", "₄", "⁺", "⁻", "²⁺", "³⁺", "·", "≈"],
+  Biology: ["×", "→", "°", "±", "μ", "α", "β", "Δ", "≈"],
+};
+
 const LearningChat = ({ subject, onBack, onStartQuiz }: LearningChatProps) => {
   const sampleQuestions: Record<string, string[]> = {
     Mathematics: ["Explain quadratic equations", "How do I solve simultaneous equations?", "What is the formula for compound interest?"],
