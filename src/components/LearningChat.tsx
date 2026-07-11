@@ -30,7 +30,23 @@ const SCIENCE_SYMBOLS: Record<string, string[]> = {
 };
 
 const LearningChat = ({ subject, onBack, onStartQuiz }: LearningChatProps) => {
-  const sampleQuestions: Record<string, string[]> = {
+  const symbols = SCIENCE_SYMBOLS[subject.name];
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  const insertSymbol = (sym: string) => {
+    const el = inputRef.current;
+    if (!el) { setInput((v) => v + sym); return; }
+    const start = el.selectionStart ?? input.length;
+    const end = el.selectionEnd ?? input.length;
+    const next = input.slice(0, start) + sym + input.slice(end);
+    setInput(next);
+    requestAnimationFrame(() => {
+      el.focus();
+      const pos = start + sym.length;
+      el.setSelectionRange(pos, pos);
+    });
+  };
+
     Mathematics: ["Explain quadratic equations", "How do I solve simultaneous equations?", "What is the formula for compound interest?"],
     "English Language": ["What are the types of clauses?", "Explain the use of reported speech", "How do I write a formal letter?"],
     Physics: ["What is Newton's second law of motion?", "Explain the concept of electromagnetic induction", "How does a transformer work?"],
