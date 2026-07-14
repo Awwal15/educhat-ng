@@ -4,7 +4,6 @@ import { subjects, Subject } from "@/data/subjects";
 import SubjectCard from "@/components/SubjectCard";
 import LearningChat from "@/components/LearningChat";
 import QuizView from "@/components/QuizView";
-import RecentChats from "@/components/RecentChats";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 
@@ -68,9 +67,6 @@ const Subjects = () => {
           </h1>
         </div>
 
-        <div className="mb-4">
-          <RecentChats limit={5} onOpen={handleSelectSubject} />
-        </div>
 
         <div className="space-y-3">
           {subjects.map((subject, i) => (

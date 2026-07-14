@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { ArrowLeft, Send, Loader2, History, X, MessageSquare } from "lucide-react";
+import { ArrowLeft, Send, Loader2, History, X, MessageSquare, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Subject } from "@/data/subjects";
 import ReactMarkdown from "react-markdown";
@@ -212,6 +212,46 @@ const LearningChat = ({ subject, onBack, onStartQuiz }: LearningChatProps) => {
     setHistoryOpen(false);
   };
 
+  const isUuid = (s: string) => /^[0-9a-f-]{36}$/i.test(s);
+
+  const deleteQuestion = async (id: string) => {
+    if (!confirm("Delete this question and its answer?")) return;
+    // find index of the user message and the following assistant message
+    const idx = messages.findIndex((m) => m.id === id);
+    const idsToRemove = new Set<string>([id]);
+    if (idx >= 0 && messages[idx + 1]?.role === "assistant") {
+      idsToRemove.add(messages[idx + 1].id);
+    }
+    // remove locally
+    setMessages((prev) => prev.filter((m) => !idsToRemove.has(m.id)));
+    // remove persisted rows if we have real ids
+    if (user) {
+      const dbIds = [...idsToRemove].filter(isUuid);
+      if (dbIds.length) {
+        const { error } = await supabase
+          .from("chat_messages" as any)
+          .delete()
+          .eq("user_id", user.id)
+          .in("id", dbIds);
+        if (error) toast.error("Failed to delete on server");
+      }
+    }
+  };
+
+  const clearAllHistory = async () => {
+    if (!confirm(`Clear all ${subject.name} chat history?`)) return;
+    setMessages((prev) => [prev[0]]);
+    if (user) {
+      const { error } = await supabase
+        .from("chat_messages" as any)
+        .delete()
+        .eq("user_id", user.id)
+        .eq("subject_id", subject.id);
+      if (error) toast.error("Failed to clear history");
+      else toast.success("History cleared");
+    }
+  };
+
   return (
     <div className="flex h-[100dvh] flex-col bg-background">
       {/* Header */}
@@ -248,7 +288,16 @@ const LearningChat = ({ subject, onBack, onStartQuiz }: LearningChatProps) => {
         <aside className="hidden lg:flex w-64 shrink-0 flex-col border-r border-border bg-card">
           <div className="px-4 py-3 border-b border-border flex items-center gap-2">
             <History className="h-4 w-4 text-primary" />
-            <h3 className="font-heading text-sm font-semibold">Chat History</h3>
+            <h3 className="font-heading text-sm font-semibold flex-1">Chat History</h3>
+            {pastQuestions.length > 0 && (
+              <button
+                onClick={clearAllHistory}
+                className="text-[11px] text-muted-foreground hover:text-destructive"
+                aria-label="Clear all history"
+              >
+                Clear all
+              </button>
+            )}
           </div>
           <div className="flex-1 overflow-y-auto p-2 space-y-1">
             {pastQuestions.length === 0 ? (
@@ -257,14 +306,25 @@ const LearningChat = ({ subject, onBack, onStartQuiz }: LearningChatProps) => {
               </p>
             ) : (
               pastQuestions.map((q, i) => (
-                <button
+                <div
                   key={q.id}
-                  onClick={() => jumpTo(q.id)}
-                  className="w-full text-left rounded-lg px-3 py-2 text-xs text-card-foreground hover:bg-accent transition flex items-start gap-2"
+                  className="group flex items-start gap-1 rounded-lg text-xs text-card-foreground hover:bg-accent transition"
                 >
-                  <MessageSquare className="h-3.5 w-3.5 mt-0.5 shrink-0 text-primary" />
-                  <span className="line-clamp-2">{i + 1}. {q.content}</span>
-                </button>
+                  <button
+                    onClick={() => jumpTo(q.id)}
+                    className="flex-1 text-left px-3 py-2 flex items-start gap-2"
+                  >
+                    <MessageSquare className="h-3.5 w-3.5 mt-0.5 shrink-0 text-primary" />
+                    <span className="line-clamp-2">{i + 1}. {q.content}</span>
+                  </button>
+                  <button
+                    onClick={() => deleteQuestion(q.id)}
+                    aria-label="Delete this question"
+                    className="px-2 py-2 text-muted-foreground hover:text-destructive"
+                  >
+                    <Trash2 className="h-3.5 w-3.5" />
+                  </button>
+                </div>
               ))
             )}
           </div>
@@ -278,6 +338,14 @@ const LearningChat = ({ subject, onBack, onStartQuiz }: LearningChatProps) => {
               <div className="px-4 py-3 border-b border-border flex items-center gap-2">
                 <History className="h-4 w-4 text-primary" />
                 <h3 className="font-heading text-sm font-semibold flex-1">Chat History</h3>
+                {pastQuestions.length > 0 && (
+                  <button
+                    onClick={clearAllHistory}
+                    className="text-[11px] text-muted-foreground hover:text-destructive"
+                  >
+                    Clear all
+                  </button>
+                )}
                 <button onClick={() => setHistoryOpen(false)} aria-label="Close">
                   <X className="h-5 w-5" />
                 </button>
@@ -289,14 +357,25 @@ const LearningChat = ({ subject, onBack, onStartQuiz }: LearningChatProps) => {
                   </p>
                 ) : (
                   pastQuestions.map((q, i) => (
-                    <button
+                    <div
                       key={q.id}
-                      onClick={() => jumpTo(q.id)}
-                      className="w-full text-left rounded-lg px-3 py-2 text-xs text-card-foreground hover:bg-accent transition flex items-start gap-2"
+                      className="flex items-start gap-1 rounded-lg text-xs text-card-foreground hover:bg-accent transition"
                     >
-                      <MessageSquare className="h-3.5 w-3.5 mt-0.5 shrink-0 text-primary" />
-                      <span className="line-clamp-2">{i + 1}. {q.content}</span>
-                    </button>
+                      <button
+                        onClick={() => jumpTo(q.id)}
+                        className="flex-1 text-left px-3 py-2 flex items-start gap-2"
+                      >
+                        <MessageSquare className="h-3.5 w-3.5 mt-0.5 shrink-0 text-primary" />
+                        <span className="line-clamp-2">{i + 1}. {q.content}</span>
+                      </button>
+                      <button
+                        onClick={() => deleteQuestion(q.id)}
+                        aria-label="Delete this question"
+                        className="px-2 py-2 text-muted-foreground hover:text-destructive"
+                      >
+                        <Trash2 className="h-3.5 w-3.5" />
+                      </button>
+                    </div>
                   ))
                 )}
               </div>
