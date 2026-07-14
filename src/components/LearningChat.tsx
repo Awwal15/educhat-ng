@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { ArrowLeft, Send, Loader2, History, X, MessageSquare } from "lucide-react";
+import { ArrowLeft, Send, Loader2, History, X, MessageSquare, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Subject } from "@/data/subjects";
 import ReactMarkdown from "react-markdown";
