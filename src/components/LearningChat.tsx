@@ -74,7 +74,9 @@ const LearningChat = ({ subject, onBack, onStartQuiz }: LearningChatProps) => {
   ]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [historyOpen, setHistoryOpen] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
+  const messageRefs = useRef<Record<string, HTMLDivElement | null>>({});
   const { user } = useAuth();
 
   useEffect(() => {
