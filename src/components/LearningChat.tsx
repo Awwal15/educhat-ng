@@ -204,6 +204,14 @@ const LearningChat = ({ subject, onBack, onStartQuiz }: LearningChatProps) => {
 
   const Icon = subject.icon;
 
+  const pastQuestions = messages.filter((m) => m.role === "user");
+
+  const jumpTo = (id: string) => {
+    const el = messageRefs.current[id];
+    if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+    setHistoryOpen(false);
+  };
+
   return (
     <div className="flex h-[100dvh] flex-col bg-background">
       {/* Header */}
@@ -216,8 +224,17 @@ const LearningChat = ({ subject, onBack, onStartQuiz }: LearningChatProps) => {
         </div>
         <h2 className="font-heading font-semibold text-card-foreground truncate">{subject.name}</h2>
         <Button
+          variant="ghost"
+          size="icon"
+          className="ml-auto shrink-0 lg:hidden"
+          onClick={() => setHistoryOpen(true)}
+          aria-label="Open chat history"
+        >
+          <History className="h-5 w-5" />
+        </Button>
+        <Button
           size="sm"
-          className="ml-auto shrink-0 hero-gradient text-primary-foreground font-semibold text-xs"
+          className="shrink-0 hero-gradient text-primary-foreground font-semibold text-xs lg:ml-auto"
           onClick={() => onStartQuiz(messages)}
           disabled={messages.length < 3}
         >
@@ -225,37 +242,101 @@ const LearningChat = ({ subject, onBack, onStartQuiz }: LearningChatProps) => {
         </Button>
       </div>
 
-      {/* Messages */}
-      <div ref={scrollRef} className="flex-1 overflow-y-auto px-4 py-4 space-y-4">
-        {messages.map((msg) => (
-            <div
-              key={msg.id}
-              className={`flex animate-fade-in ${msg.role === "user" ? "justify-end" : "justify-start"}`}
-            >
-              <div
-                className={`max-w-[85%] rounded-2xl px-4 py-3 text-sm leading-relaxed ${
-                  msg.role === "user"
-                    ? "hero-gradient text-primary-foreground rounded-br-md"
-                    : "bg-card card-shadow text-card-foreground rounded-bl-md"
-                }`}
-              >
-                {msg.role === "assistant" ? (
-                  <div className="prose prose-sm max-w-none prose-headings:font-heading prose-headings:text-card-foreground prose-p:text-card-foreground prose-strong:text-card-foreground prose-li:text-card-foreground">
-                    <ReactMarkdown>{msg.content}</ReactMarkdown>
-                  </div>
+      {/* Body: sidebar + messages */}
+      <div className="flex flex-1 min-h-0">
+        {/* Left history panel */}
+        <aside className="hidden lg:flex w-64 shrink-0 flex-col border-r border-border bg-card">
+          <div className="px-4 py-3 border-b border-border flex items-center gap-2">
+            <History className="h-4 w-4 text-primary" />
+            <h3 className="font-heading text-sm font-semibold">Chat History</h3>
+          </div>
+          <div className="flex-1 overflow-y-auto p-2 space-y-1">
+            {pastQuestions.length === 0 ? (
+              <p className="text-xs text-muted-foreground px-2 py-3">
+                Your questions will appear here.
+              </p>
+            ) : (
+              pastQuestions.map((q, i) => (
+                <button
+                  key={q.id}
+                  onClick={() => jumpTo(q.id)}
+                  className="w-full text-left rounded-lg px-3 py-2 text-xs text-card-foreground hover:bg-accent transition flex items-start gap-2"
+                >
+                  <MessageSquare className="h-3.5 w-3.5 mt-0.5 shrink-0 text-primary" />
+                  <span className="line-clamp-2">{i + 1}. {q.content}</span>
+                </button>
+              ))
+            )}
+          </div>
+        </aside>
+
+        {/* Mobile drawer */}
+        {historyOpen && (
+          <div className="lg:hidden fixed inset-0 z-50 flex">
+            <div className="absolute inset-0 bg-black/40" onClick={() => setHistoryOpen(false)} />
+            <aside className="relative w-72 max-w-[80%] bg-card flex flex-col animate-fade-in">
+              <div className="px-4 py-3 border-b border-border flex items-center gap-2">
+                <History className="h-4 w-4 text-primary" />
+                <h3 className="font-heading text-sm font-semibold flex-1">Chat History</h3>
+                <button onClick={() => setHistoryOpen(false)} aria-label="Close">
+                  <X className="h-5 w-5" />
+                </button>
+              </div>
+              <div className="flex-1 overflow-y-auto p-2 space-y-1">
+                {pastQuestions.length === 0 ? (
+                  <p className="text-xs text-muted-foreground px-2 py-3">
+                    Your questions will appear here.
+                  </p>
                 ) : (
-                  msg.content
+                  pastQuestions.map((q, i) => (
+                    <button
+                      key={q.id}
+                      onClick={() => jumpTo(q.id)}
+                      className="w-full text-left rounded-lg px-3 py-2 text-xs text-card-foreground hover:bg-accent transition flex items-start gap-2"
+                    >
+                      <MessageSquare className="h-3.5 w-3.5 mt-0.5 shrink-0 text-primary" />
+                      <span className="line-clamp-2">{i + 1}. {q.content}</span>
+                    </button>
+                  ))
                 )}
               </div>
-            </div>
-          ))}
-        {isLoading && messages[messages.length - 1]?.role !== "assistant" && (
-          <div className="flex justify-start animate-fade-in">
-            <div className="bg-card card-shadow rounded-2xl rounded-bl-md px-4 py-3">
-              <Loader2 className="h-5 w-5 animate-spin text-primary" />
-            </div>
+            </aside>
           </div>
         )}
+
+        {/* Messages */}
+        <div ref={scrollRef} className="flex-1 overflow-y-auto px-4 py-4 space-y-4">
+          {messages.map((msg) => (
+              <div
+                key={msg.id}
+                ref={(el) => { messageRefs.current[msg.id] = el; }}
+                className={`flex animate-fade-in ${msg.role === "user" ? "justify-end" : "justify-start"}`}
+              >
+                <div
+                  className={`max-w-[85%] rounded-2xl px-4 py-3 text-sm leading-relaxed ${
+                    msg.role === "user"
+                      ? "hero-gradient text-primary-foreground rounded-br-md"
+                      : "bg-card card-shadow text-card-foreground rounded-bl-md"
+                  }`}
+                >
+                  {msg.role === "assistant" ? (
+                    <div className="prose prose-sm max-w-none prose-headings:font-heading prose-headings:text-card-foreground prose-p:text-card-foreground prose-strong:text-card-foreground prose-li:text-card-foreground">
+                      <ReactMarkdown>{msg.content}</ReactMarkdown>
+                    </div>
+                  ) : (
+                    msg.content
+                  )}
+                </div>
+              </div>
+            ))}
+          {isLoading && messages[messages.length - 1]?.role !== "assistant" && (
+            <div className="flex justify-start animate-fade-in">
+              <div className="bg-card card-shadow rounded-2xl rounded-bl-md px-4 py-3">
+                <Loader2 className="h-5 w-5 animate-spin text-primary" />
+              </div>
+            </div>
+          )}
+        </div>
       </div>
 
       {/* Input */}
