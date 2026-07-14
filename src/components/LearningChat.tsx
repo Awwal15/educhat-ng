@@ -338,6 +338,14 @@ const LearningChat = ({ subject, onBack, onStartQuiz }: LearningChatProps) => {
               <div className="px-4 py-3 border-b border-border flex items-center gap-2">
                 <History className="h-4 w-4 text-primary" />
                 <h3 className="font-heading text-sm font-semibold flex-1">Chat History</h3>
+                {pastQuestions.length > 0 && (
+                  <button
+                    onClick={clearAllHistory}
+                    className="text-[11px] text-muted-foreground hover:text-destructive"
+                  >
+                    Clear all
+                  </button>
+                )}
                 <button onClick={() => setHistoryOpen(false)} aria-label="Close">
                   <X className="h-5 w-5" />
                 </button>
@@ -349,14 +357,25 @@ const LearningChat = ({ subject, onBack, onStartQuiz }: LearningChatProps) => {
                   </p>
                 ) : (
                   pastQuestions.map((q, i) => (
-                    <button
+                    <div
                       key={q.id}
-                      onClick={() => jumpTo(q.id)}
-                      className="w-full text-left rounded-lg px-3 py-2 text-xs text-card-foreground hover:bg-accent transition flex items-start gap-2"
+                      className="flex items-start gap-1 rounded-lg text-xs text-card-foreground hover:bg-accent transition"
                     >
-                      <MessageSquare className="h-3.5 w-3.5 mt-0.5 shrink-0 text-primary" />
-                      <span className="line-clamp-2">{i + 1}. {q.content}</span>
-                    </button>
+                      <button
+                        onClick={() => jumpTo(q.id)}
+                        className="flex-1 text-left px-3 py-2 flex items-start gap-2"
+                      >
+                        <MessageSquare className="h-3.5 w-3.5 mt-0.5 shrink-0 text-primary" />
+                        <span className="line-clamp-2">{i + 1}. {q.content}</span>
+                      </button>
+                      <button
+                        onClick={() => deleteQuestion(q.id)}
+                        aria-label="Delete this question"
+                        className="px-2 py-2 text-muted-foreground hover:text-destructive"
+                      >
+                        <Trash2 className="h-3.5 w-3.5" />
+                      </button>
+                    </div>
                   ))
                 )}
               </div>
