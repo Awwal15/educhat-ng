@@ -4,7 +4,6 @@ import { subjects, Subject } from "@/data/subjects";
 import SubjectCard from "@/components/SubjectCard";
 import LearningChat from "@/components/LearningChat";
 import QuizView from "@/components/QuizView";
-import RecentChats from "@/components/RecentChats";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 
