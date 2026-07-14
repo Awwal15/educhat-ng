@@ -212,6 +212,46 @@ const LearningChat = ({ subject, onBack, onStartQuiz }: LearningChatProps) => {
     setHistoryOpen(false);
   };
 
+  const isUuid = (s: string) => /^[0-9a-f-]{36}$/i.test(s);
+
+  const deleteQuestion = async (id: string) => {
+    if (!confirm("Delete this question and its answer?")) return;
+    // find index of the user message and the following assistant message
+    const idx = messages.findIndex((m) => m.id === id);
+    const idsToRemove = new Set<string>([id]);
+    if (idx >= 0 && messages[idx + 1]?.role === "assistant") {
+      idsToRemove.add(messages[idx + 1].id);
+    }
+    // remove locally
+    setMessages((prev) => prev.filter((m) => !idsToRemove.has(m.id)));
+    // remove persisted rows if we have real ids
+    if (user) {
+      const dbIds = [...idsToRemove].filter(isUuid);
+      if (dbIds.length) {
+        const { error } = await supabase
+          .from("chat_messages" as any)
+          .delete()
+          .eq("user_id", user.id)
+          .in("id", dbIds);
+        if (error) toast.error("Failed to delete on server");
+      }
+    }
+  };
+
+  const clearAllHistory = async () => {
+    if (!confirm(`Clear all ${subject.name} chat history?`)) return;
+    setMessages((prev) => [prev[0]]);
+    if (user) {
+      const { error } = await supabase
+        .from("chat_messages" as any)
+        .delete()
+        .eq("user_id", user.id)
+        .eq("subject_id", subject.id);
+      if (error) toast.error("Failed to clear history");
+      else toast.success("History cleared");
+    }
+  };
+
   return (
     <div className="flex h-[100dvh] flex-col bg-background">
       {/* Header */}
