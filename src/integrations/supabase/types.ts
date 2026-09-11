@@ -170,6 +170,33 @@ export type Database = {
         }
         Relationships: []
       }
+      study_tips: {
+        Row: {
+          created_at: string
+          id: string
+          subject_id: string
+          subject_name: string
+          tip: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          subject_id: string
+          subject_name: string
+          tip: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          subject_id?: string
+          subject_name?: string
+          tip?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
