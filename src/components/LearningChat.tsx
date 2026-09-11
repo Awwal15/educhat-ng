@@ -414,6 +414,48 @@ const LearningChat = ({ subject, onBack, onStartQuiz }: LearningChatProps) => {
           </div>
         )}
 
+        {/* Study tip card */}
+        {!tipDismissed && (tipLoading || tip) && (
+          <div className="shrink-0 border-b border-border bg-secondary/40 px-4 py-2">
+            <div className="flex items-center gap-2">
+              <Lightbulb className="h-4 w-4 shrink-0 text-primary" />
+              <span className="font-heading text-xs font-semibold text-card-foreground">
+                Study Tip — {subject.name} weak areas
+              </span>
+              <div className="ml-auto flex items-center">
+                {tip && (
+                  <button
+                    onClick={() => setTipCollapsed((c) => !c)}
+                    aria-label={tipCollapsed ? "Expand study tip" : "Collapse study tip"}
+                    className="p-1 text-muted-foreground hover:text-foreground"
+                  >
+                    {tipCollapsed ? <ChevronDown className="h-4 w-4" /> : <ChevronUp className="h-4 w-4" />}
+                  </button>
+                )}
+                <button
+                  onClick={() => setTipDismissed(true)}
+                  aria-label="Dismiss study tip"
+                  className="p-1 text-muted-foreground hover:text-foreground"
+                >
+                  <X className="h-4 w-4" />
+                </button>
+              </div>
+            </div>
+            {tipLoading ? (
+              <div className="flex items-center gap-2 pt-1 text-xs text-muted-foreground">
+                <Loader2 className="h-3.5 w-3.5 animate-spin text-primary" />
+                Preparing your study tip...
+              </div>
+            ) : (
+              tip && !tipCollapsed && (
+                <div className="prose prose-sm max-w-none pt-1 text-xs prose-li:text-card-foreground prose-strong:text-card-foreground prose-ul:my-1 prose-li:my-0">
+                  <ReactMarkdown>{tip}</ReactMarkdown>
+                </div>
+              )
+            )}
+          </div>
+        )}
+
         {/* Messages */}
         <div ref={scrollRef} className="flex-1 overflow-y-auto px-4 py-4 space-y-4">
           {messages.map((msg) => (
