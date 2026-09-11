@@ -108,6 +108,33 @@ const LearningChat = ({ subject, onBack, onStartQuiz }: LearningChatProps) => {
     return () => { cancelled = true; };
   }, [user, subject.id]);
 
+  // Load (or generate once) the study tip for this subject
+  useEffect(() => {
+    let cancelled = false;
+    setTip(null);
+    setTipLoading(true);
+    setTipDismissed(false);
+    setTipCollapsed(false);
+    (async () => {
+      try {
+        const { data, error } = await supabase.functions.invoke("get-study-tip", {
+          body: { subjectId: subject.id, subjectName: subject.name },
+        });
+        if (cancelled) return;
+        if (error || !data?.tip) {
+          setTipLoading(false);
+          return;
+        }
+        setTip(data.tip);
+      } catch {
+        // Tip is a nice-to-have; fail silently on poor networks
+      } finally {
+        if (!cancelled) setTipLoading(false);
+      }
+    })();
+    return () => { cancelled = true; };
+  }, [subject.id, subject.name]);
+
 
   const handleSend = async () => {
     const text = input.trim();
