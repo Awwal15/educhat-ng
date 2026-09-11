@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { ArrowLeft, Send, Loader2, History, X, MessageSquare, Trash2 } from "lucide-react";
+import { ArrowLeft, Send, Loader2, History, X, MessageSquare, Trash2, Lightbulb, ChevronDown, ChevronUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Subject } from "@/data/subjects";
 import ReactMarkdown from "react-markdown";
@@ -75,6 +75,10 @@ const LearningChat = ({ subject, onBack, onStartQuiz }: LearningChatProps) => {
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [historyOpen, setHistoryOpen] = useState(false);
+  const [tip, setTip] = useState<string | null>(null);
+  const [tipLoading, setTipLoading] = useState(true);
+  const [tipDismissed, setTipDismissed] = useState(false);
+  const [tipCollapsed, setTipCollapsed] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
   const messageRefs = useRef<Record<string, HTMLDivElement | null>>({});
   const { user } = useAuth();
