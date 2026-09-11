@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { ArrowLeft, Send, Loader2, History, X, MessageSquare, Trash2 } from "lucide-react";
+import { ArrowLeft, Send, Loader2, History, X, MessageSquare, Trash2, Lightbulb, ChevronDown, ChevronUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Subject } from "@/data/subjects";
 import ReactMarkdown from "react-markdown";
@@ -75,6 +75,10 @@ const LearningChat = ({ subject, onBack, onStartQuiz }: LearningChatProps) => {
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [historyOpen, setHistoryOpen] = useState(false);
+  const [tip, setTip] = useState<string | null>(null);
+  const [tipLoading, setTipLoading] = useState(true);
+  const [tipDismissed, setTipDismissed] = useState(false);
+  const [tipCollapsed, setTipCollapsed] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
   const messageRefs = useRef<Record<string, HTMLDivElement | null>>({});
   const { user } = useAuth();
@@ -103,6 +107,33 @@ const LearningChat = ({ subject, onBack, onStartQuiz }: LearningChatProps) => {
     })();
     return () => { cancelled = true; };
   }, [user, subject.id]);
+
+  // Load (or generate once) the study tip for this subject
+  useEffect(() => {
+    let cancelled = false;
+    setTip(null);
+    setTipLoading(true);
+    setTipDismissed(false);
+    setTipCollapsed(false);
+    (async () => {
+      try {
+        const { data, error } = await supabase.functions.invoke("get-study-tip", {
+          body: { subjectId: subject.id, subjectName: subject.name },
+        });
+        if (cancelled) return;
+        if (error || !data?.tip) {
+          setTipLoading(false);
+          return;
+        }
+        setTip(data.tip);
+      } catch {
+        // Tip is a nice-to-have; fail silently on poor networks
+      } finally {
+        if (!cancelled) setTipLoading(false);
+      }
+    })();
+    return () => { cancelled = true; };
+  }, [subject.id, subject.name]);
 
 
   const handleSend = async () => {
@@ -380,6 +411,48 @@ const LearningChat = ({ subject, onBack, onStartQuiz }: LearningChatProps) => {
                 )}
               </div>
             </aside>
+          </div>
+        )}
+
+        {/* Study tip card */}
+        {!tipDismissed && (tipLoading || tip) && (
+          <div className="shrink-0 border-b border-border bg-secondary/40 px-4 py-2">
+            <div className="flex items-center gap-2">
+              <Lightbulb className="h-4 w-4 shrink-0 text-primary" />
+              <span className="font-heading text-xs font-semibold text-card-foreground">
+                Study Tip — {subject.name} weak areas
+              </span>
+              <div className="ml-auto flex items-center">
+                {tip && (
+                  <button
+                    onClick={() => setTipCollapsed((c) => !c)}
+                    aria-label={tipCollapsed ? "Expand study tip" : "Collapse study tip"}
+                    className="p-1 text-muted-foreground hover:text-foreground"
+                  >
+                    {tipCollapsed ? <ChevronDown className="h-4 w-4" /> : <ChevronUp className="h-4 w-4" />}
+                  </button>
+                )}
+                <button
+                  onClick={() => setTipDismissed(true)}
+                  aria-label="Dismiss study tip"
+                  className="p-1 text-muted-foreground hover:text-foreground"
+                >
+                  <X className="h-4 w-4" />
+                </button>
+              </div>
+            </div>
+            {tipLoading ? (
+              <div className="flex items-center gap-2 pt-1 text-xs text-muted-foreground">
+                <Loader2 className="h-3.5 w-3.5 animate-spin text-primary" />
+                Preparing your study tip...
+              </div>
+            ) : (
+              tip && !tipCollapsed && (
+                <div className="prose prose-sm max-w-none pt-1 text-xs prose-li:text-card-foreground prose-strong:text-card-foreground prose-ul:my-1 prose-li:my-0">
+                  <ReactMarkdown>{tip}</ReactMarkdown>
+                </div>
+              )
+            )}
           </div>
         )}
 
