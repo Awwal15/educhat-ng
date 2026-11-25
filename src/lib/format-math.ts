@@ -61,18 +61,56 @@ const latexSymbols: Record<string, string> = {
   int: "∫",
 };
 
+const fractionStart = "\uE000";
+const fractionEnd = "\uE001";
+
 const toSuperscript = (value: string) => {
   const expression = value.trim().replace(/^\((.*)\)$/s, "$1").trim();
-  const superscript = Array.from(expression)
-    .map((character) => superscriptCharacters[character] ?? character)
+  const parts = expression.split(/(\d+\s*\/\s*\d+)/g);
+  const superscript = parts
+    .map((part) => {
+      if (/^\d+\s*\/\s*\d+$/.test(part)) {
+        const [numerator, denominator] = part.split("/").map((number) => number.trim());
+        return `${fractionStart}${numerator}/${denominator}${fractionEnd}`;
+      }
+
+      return Array.from(part)
+        .map((character) => superscriptCharacters[character] ?? character)
+        .join("");
+    })
     .join("");
 
   return expression.length === 1 ? superscript : `⁽${superscript}⁾`;
 };
 
+export type MathTextSegment =
+  | { type: "text"; text: string }
+  | { type: "fraction"; numerator: string; denominator: string };
+
+export function splitMathText(content: string): MathTextSegment[] {
+  const segments: MathTextSegment[] = [];
+  const fractionPattern = /\uE000(\d+)\/(\d+)\uE001/g;
+  let lastIndex = 0;
+  let match: RegExpExecArray | null;
+
+  while ((match = fractionPattern.exec(content)) !== null) {
+    if (match.index > lastIndex) {
+      segments.push({ type: "text", text: content.slice(lastIndex, match.index) });
+    }
+    segments.push({ type: "fraction", numerator: match[1], denominator: match[2] });
+    lastIndex = match.index + match[0].length;
+  }
+
+  if (lastIndex < content.length || segments.length === 0) {
+    segments.push({ type: "text", text: content.slice(lastIndex) });
+  }
+
+  return segments;
+}
+
 export function formatMathResponse(content: string): string {
   return content
-    .replace(/\\frac\s*\{([^{}]+)\}\s*\{([^{}]+)\}/g, "$1⁄$2")
+    .replace(/\\frac\s*\{([^{}]+)\}\s*\{([^{}]+)\}/g, "$1/$2")
     .replace(/\\sqrt\s*\{([^{}]+)\}/g, "√($1)")
     .replace(/\\(times|cdot|div|pm|pi|theta|alpha|beta|neq|leq|geq|approx|infty|sum|int)\b/g, (_match, command: string) => latexSymbols[command])
     .replace(/\\(?:left|right)\b/g, "")

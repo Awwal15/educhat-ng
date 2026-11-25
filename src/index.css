@@ -73,4 +73,19 @@
   .card-hover-shadow {
     box-shadow: var(--card-hover-shadow);
   }
+  .math-exponent-fraction {
+    display: inline-grid;
+    grid-template-rows: auto auto;
+    vertical-align: super;
+    text-align: center;
+    font-size: 0.7em;
+    line-height: 1;
+  }
+  .math-exponent-fraction > span:first-child {
+    border-bottom: 1px solid currentColor;
+    padding-inline: 0.12em;
+  }
+  .math-exponent-fraction > span:last-child {
+    padding-inline: 0.12em;
+  }
 }

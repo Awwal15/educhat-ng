@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { Children, cloneElement, isValidElement, useState, useRef, useEffect, type ReactNode } from "react";
 import { ArrowLeft, Send, Loader2, History, X, MessageSquare, Trash2, Lightbulb, ChevronDown, ChevronUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Subject } from "@/data/subjects";
@@ -6,7 +6,7 @@ import ReactMarkdown from "react-markdown";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/components/AuthProvider";
 import { toast } from "sonner";
-import { formatMathResponse } from "@/lib/format-math";
+import { formatMathResponse, splitMathText } from "@/lib/format-math";
 
 
 interface Message {
@@ -28,6 +28,41 @@ const SCIENCE_SYMBOLS: Record<string, string[]> = {
   Physics: ["×", "÷", "±", "√", "π", "²", "³", "°", "θ", "λ", "μ", "Ω", "α", "β", "Δ", "→", "≈", "≤", "≥", "^", "·"],
   Chemistry: ["→", "⇌", "↑", "↓", "Δ", "°", "±", "₁", "₂", "₃", "₄", "⁺", "⁻", "²⁺", "³⁺", "·", "≈"],
   Biology: ["×", "→", "°", "±", "μ", "α", "β", "Δ", "≈"],
+};
+
+const renderMathChildren = (children: ReactNode): ReactNode =>
+  Children.map(children, (child) => {
+    if (typeof child === "string") {
+      return splitMathText(child).map((segment, index) =>
+        segment.type === "text" ? (
+          segment.text
+        ) : (
+          <span
+            key={`math-fraction-${index}`}
+            className="math-exponent-fraction"
+            aria-label={`${segment.numerator} over ${segment.denominator}`}
+          >
+            <span aria-hidden="true">{segment.numerator}</span>
+            <span aria-hidden="true">{segment.denominator}</span>
+          </span>
+        ),
+      );
+    }
+
+    if (isValidElement<{ children?: ReactNode }>(child) && child.props.children !== undefined) {
+      return cloneElement(child, {}, renderMathChildren(child.props.children));
+    }
+
+    return child;
+  });
+
+const mathMarkdownComponents = {
+  p: ({ node: _node, children, ...props }: { node?: unknown; children?: ReactNode; [key: string]: unknown }) => (
+    <p {...props}>{renderMathChildren(children)}</p>
+  ),
+  li: ({ node: _node, children, ...props }: { node?: unknown; children?: ReactNode; [key: string]: unknown }) => (
+    <li {...props}>{renderMathChildren(children)}</li>
+  ),
 };
 
 const LearningChat = ({ subject, onBack, onStartQuiz }: LearningChatProps) => {
@@ -473,7 +508,7 @@ const LearningChat = ({ subject, onBack, onStartQuiz }: LearningChatProps) => {
                 >
                   {msg.role === "assistant" ? (
                     <div className="prose prose-sm max-w-none prose-headings:font-heading prose-headings:text-card-foreground prose-p:text-card-foreground prose-strong:text-card-foreground prose-li:text-card-foreground">
-                      <ReactMarkdown>
+                      <ReactMarkdown components={subject.name === "Mathematics" ? mathMarkdownComponents : undefined}>
                         {subject.name === "Mathematics" ? formatMathResponse(msg.content) : msg.content}
                       </ReactMarkdown>
                     </div>
