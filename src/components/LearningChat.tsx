@@ -6,6 +6,7 @@ import ReactMarkdown from "react-markdown";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/components/AuthProvider";
 import { toast } from "sonner";
+import { formatMathResponse } from "@/lib/format-math";
 
 
 interface Message {
@@ -472,7 +473,9 @@ const LearningChat = ({ subject, onBack, onStartQuiz }: LearningChatProps) => {
                 >
                   {msg.role === "assistant" ? (
                     <div className="prose prose-sm max-w-none prose-headings:font-heading prose-headings:text-card-foreground prose-p:text-card-foreground prose-strong:text-card-foreground prose-li:text-card-foreground">
-                      <ReactMarkdown>{msg.content}</ReactMarkdown>
+                      <ReactMarkdown>
+                        {subject.name === "Mathematics" ? formatMathResponse(msg.content) : msg.content}
+                      </ReactMarkdown>
                     </div>
                   ) : (
                     msg.content

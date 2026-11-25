@@ -1,0 +1,1 @@
+- Keep math-response normalization in `src/lib/format-math.ts` so Mathematics chat can display plain Unicode calculations consistently and testably.

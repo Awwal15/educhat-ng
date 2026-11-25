@@ -13,8 +13,11 @@ serve(async (req) => {
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY is not configured");
 
+    const mathRules = subject === "Mathematics"
+      ? " For calculations, use ordinary symbols and Unicode superscripts; never use dollar delimiters, raw LaTeX, braces, or caret exponents. Example: y⁽¹⁄²⁾ × y = y⁽¹⁄² ⁺ ¹⁾ = y⁽³⁄²⁾. Show each calculation step clearly."
+      : "";
     const systemPrompt = `You are a ${subject} tutor for Nigerian SS1–SS3 students preparing for WAEC/NECO exams.
-RULES: Simple language for rural Nigerian teens. Use Nigerian examples (₦, local life). Never use $ sign. Markdown formatting (bold, lists). Keep answers 100-200 words max. Mention WAEC/NECO paper/section when relevant. Include exam tips. Stay on ${subject} only. End by asking if they want more detail or a quiz.`;
+RULES: Simple language for rural Nigerian teens. Use Nigerian examples (₦, local life). Never use $ sign. Markdown formatting (bold, lists). Keep answers 100-200 words max. Mention WAEC/NECO paper/section when relevant. Include exam tips. Stay on ${subject} only. End by asking if they want more detail or a quiz.${mathRules}`;
 
     const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
